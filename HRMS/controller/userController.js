@@ -34,6 +34,18 @@ export const reg=async (req,res)=>{
         })  
     }    
 }
+
+//-------- Update the User
+export const updateUser= async (req, res) => {
+    try {
+        const user = await User.findByIdAndUpdate(req.body.id, {$set: req.body})
+        res.status(200).send(user)
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+
+
 export const ownerReg=async (req,res)=>{
 
     let email=req.body.email
