@@ -11,44 +11,44 @@ export const create = async (req, res) => {
     });
     try {
         await register.save();
-        res.status(201).send({message:"Register success"});
+        res.status(201).json({message:"Register success"});
     } catch (error) {
-        res.status(400).send({message:error.message});
+        res.status(400).json({message:error.message});
     }
 };
 
 export const update = async (req, res) => {
     try {
         await Rolemenu.findByIdAndupdate({_id:req.params.id},{$set:req.body},{new:true});
-        res.status(201).send({message:"update success"});
+        res.status(201).json({message:"update success"});
     } catch (error) {
-        res.status(400).send({message:error.message});
+        res.status(400).json({message:error.message});
     }
 };
 
 export const deleteRoleMenu = async (req, res) => {
     try {
         await Rolemenu.findByIdAnddelete({_id:req.params.id});
-        res.status(201).send({message:"delete success"});
+        res.status(201).json({message:"delete success"});
     } catch (error) {
-        res.status(400).send({message:error.message});
+        res.status(400).json({message:error.message});
     }
 };
 
 export const getById = async (req, res) => {
     try {
         let user=await Rolemenu.findById({_id:req.params.id});
-        res.status(201).send({data:user});
+        res.status(201).json({data:user});
     } catch (error) {
-        res.status(400).send({message:error.message});
+        res.status(400).json({message:error.message});
     }
 };
 
 export const getAll = async (req, res) => {
     try {
         let user=await Rolemenu.find();
-        res.status(201).send({data:user});
+        res.status(201).json({data:user});
     } catch (error) {
-        res.status(400).send({message:error.message});
+        res.status(400).json({message:error.message});
     }
 };
