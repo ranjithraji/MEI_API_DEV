@@ -2,6 +2,7 @@ import express from 'express'
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose'
 import user from "./routers/userRouter.js"
+import rolemenu from './routers/roleMenuRouter.js';
 import dotenv from "dotenv"
 
 dotenv.config()
@@ -10,12 +11,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 const port = process.env.PORT || 2023
 
-mongoose.connect('mongodb://localhost/hrms')
+mongoose.set('strictQuery', false);
+mongoose.connect('mongodb://192.168.1.23:27017/hrms')
 .then(() => console.log('Connected to MongoDB...'))
 .catch(err => console.error('Could not connect to MongoDB...'));
 
 app.use("/api/user",user)
+app.use("/api/rolemenu",rolemenu)
 
 app.listen(port,()=>{
-    console.log("Server connected to"+port);
+    console.log("Server connected to" + port);
 })
