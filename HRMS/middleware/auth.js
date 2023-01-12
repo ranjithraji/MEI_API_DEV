@@ -9,7 +9,7 @@ async function auth(req,res,next){
         const decoded=jwt.verify(token,process.env.JWT)
         req.user=decoded
         let user=await User.findById({_id:req.user.id}).populate("role")
-        console.log(user);
+        // console.log(user);
         next();
     } catch (error) {
         res.status(400).send("invalid token")
