@@ -16,7 +16,7 @@ export const createMenu=async(req,res)=>{
 export  const getmenu=async(req,res)=>{
     try {
         const menu= await Menu.find()
-        if(!menu) return res.status(200).json({mesage:"Sorry no menu"})
+        if(menu.length==0) return res.status(200).json({mesage:"Sorry no menu has right now"})
 
         res.status(200).json({data:menu})
     } catch (error) {

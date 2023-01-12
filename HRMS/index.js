@@ -5,6 +5,7 @@ import user from "./routers/userRouter.js"
 import menu from "./routers/menuRouter.js"
 import role from "./routers/roleRouter.js"
 import rolemenu from "./routers/roleMenuRouter.js";
+import request from "./routers/requestRouter.js";
 
 import dotenv from "dotenv"
     
@@ -20,11 +21,10 @@ mongoose.connect('mongodb://127.0.0.1:27017/hrms')
 .catch(err => console.error('Could not connect to MongoDB...'));
   
 app.use("/api/user",user)
-
 app.use("/api/rolemenu",rolemenu)
-
 app.use("/api/role",role)
 app.use("/api/menu",menu)
+app.use("/api/request",request)
 
 app.get("/",(req,res)=>{
     res.send("Hello world")

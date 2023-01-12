@@ -1,6 +1,16 @@
-const authOwner=(req,res,next)=>{
-    if(!req.user.isOwner) return res.status(403).send('Access Denied ')
+import RolemenuAccess from "../models/rolemenuModel.js";
+
+const authOwner=async(req,res,next)=>{
+    if(req.user.isOwner) return next()
+    let user=await RolemenuAccess.find({role:req.user.roleId})
+    .populate({ path: 'role', model: 'Role' }).
+    populate({ path: 'menu', model: 'Menu' });;
+    // console.log(user);
+    let access=user
+    req.user={...req.user ,access}
+    // console.log(access);
     next()
+
 }
 
 export default authOwner;

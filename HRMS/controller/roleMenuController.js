@@ -37,7 +37,7 @@ export const deleteRoleMenu = async (req, res) => {
 
 export const getById = async (req, res) => {
     try {
-        let user=await Rolemenu.findById({_id:req.params.id});
+        let user=await Rolemenu.findOne({role:req.user.roleId});
         res.status(201).json({data:user});
     } catch (error) {
         res.status(400).json({message:error.message});
@@ -46,7 +46,7 @@ export const getById = async (req, res) => {
 
 export const getAll = async (req, res) => {
     try {
-        let user=await Rolemenu.find();
+        let user=await Rolemenu.find().populate("role");
         res.status(201).json({data:user});
     } catch (error) {
         res.status(400).json({message:error.message});
