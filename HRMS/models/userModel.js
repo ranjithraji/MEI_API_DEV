@@ -47,20 +47,8 @@ const user =  new mongoose.Schema({
         ref:'Role',
     },
     educationDetails:{
-        sslc:{
-            schoolName:{
-                type:String,
-            },
-            board:{
-                type:String,
-            },
-            yearOfPassing:{
-                type:Number,
-            },
-            percentage:{
-                type:Number,
-            },
-        }
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Role',
     },
   
 

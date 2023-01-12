@@ -1,6 +1,5 @@
 import User from "../models/userModel.js"
-import * as dotenv from 'dotenv';
-
+import dotenv from 'dotenv';
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
@@ -11,7 +10,7 @@ export const reg=async (req,res)=>{
     let email=req.body.email
     let exUser=await User.findOne({email:email})
     if(exUser){
-        return res.send("email exists please login")
+        return res.status(400).json({message:"email exists please login"})
     }
     else{
         bcrypt.hash(req.body.password,saltRounds,async(err,hash)=>{
@@ -27,9 +26,9 @@ export const reg=async (req,res)=>{
             })
             try {
                 await register.save()
-                res.status(201).send(register)
+                res.status(201).json({message:"Register success"})
             } catch (error) {
-                res.status(400).send(error.message);
+                res.status(400).json({message:error.message});
             }
         })  
     }    
@@ -38,20 +37,18 @@ export const reg=async (req,res)=>{
 //-------- Update the User
 export const updateUser= async (req, res) => {
     try {
-        const user = await User.findByIdAndUpdate(req.body.id, {$set: req.body})
-        res.status(200).send(user)
+        const user = await User.findByIdAndUpdate(req.body.id, {$set: req.body},{new:true})
+        res.status(200).json({meesage:"update success"})
     } catch (error) {
-        res.status(400).send(error.message);
+        res.status(400).json({message:error.message});
     }
 }
 
-
 export const ownerReg=async (req,res)=>{
-
     let email=req.body.email
     let exUser=await User.findOne({email:email})
     if(exUser){
-        return res.send("email exists please login")
+        return res.json({message:"email exists please login"})
     }
     else{
         bcrypt.hash(req.body.password,saltRounds,async(err,hash)=>{
@@ -68,9 +65,9 @@ export const ownerReg=async (req,res)=>{
             })
             try {
                 await register.save()
-                res.status(201).send("Owner Register success")
+                res.status(201).json({meesage:"Owner Register success"})
             } catch (error) {
-                res.status(400).send(error.message);
+                res.status(400).json({message:error.message});
             }
         })  
     }    
@@ -79,83 +76,36 @@ export const ownerReg=async (req,res)=>{
 export const login=async(req,res)=>{
     let email=req.body.email
     let foundUser=await User.findOne({email:email})
-    console.log(foundUser?.password);
     if(foundUser){
         bcrypt.compare(req.body.password,foundUser.password,(err,result)=>{
-            // console.log(err);
             if(result){
                 const token=jwt.sign({id:foundUser?._id,isOwner:foundUser?.isOwner},process.env.JWT)
-                res.header("hrms-auth-token",token).send("logged successfully")
+                res.header("hrms-auth-token",token).json({message:"login successfully",token:token})
             }else{
-                res.status(400).send("please enter correct password!!!")
+                res.status(400).json({message:"please enter correct password"})
             }
         })
-        
     }else{
-        res.status(400).send("Your are not a authorized person")
+        res.status(400).json({message:error.message})
     }
 }
 
- export const deleteUser = async (req, res) => {
-  
+export const deleteUser = async (req, res) => {
     let email=req.body.email
-  const user = await User.findOneAndRemove({ email:email });
-
-  if (!user) return res.status(404).send({message:'The user with the given ID was not found.'});
-
-  res.send(user);
+    try {
+        const user = await User.findOneAndRemove({ email:email });
+        if (!user) return res.status(404).json({message:'User not found'});
+        res.status(200).json({data:user});
+    } catch (error) {
+        res.status(400).json({message:error.message});
+    }
 };
 
-//update userEducation details
-
-const updateEducation=(req,res)=>{
-    var newData={       
-    userId:req.body._id,
-    sslc:{
-       schoolName:req.body.schoolName,
-       board:req.body.board,
-       yearofpassing:req.body.yearofpassing,
-       percentage:req.body.percentage,
-    },
-    hsc:{
-        schoolName:req.body.schoolName,
-        board:req.body.board,
-        yearofpassing:req.body.yearofpassing,
-        percentage:req.body.percentage,
-     },
-
-       
-
-        }
-     async function UpdateUser(){
-                // const g_id=parseInt(req.body.genresid)
-                // console.log(g_id)
-                let email=req.body.email
-                 try {
-                     var logUser=await User.findOne({ email: email })
-                     
-                    //  console.log(existingUser);
-                    if(logUser){
-                        let u_data=await Education.updateOne({_id:newData.userId},{$set:{paidamount:newData.paidamount}})
-                        res.send(u_data)
-
-                    }
-                    if(!logcashier){
-                        // let result=Genres.updateOne([newData]);
-                        res.send("user doesn't exist. So you cant update the data")
-                    }                      
-    
-                    }
-                catch (error) {
-                     console.log(error.message)
-                 }
-      }
-      UpdateUser();
-    }  
-
-
-
 export const getAll=async(req,res)=>{
-    const getUser=await User.find()
-    res.send(getUser)
+    try {
+        const getUser=await User.find()
+        res.status(200).json({data:getUser})
+    } catch (error) {
+        res.status(400).json({message:error.message});
+    }
 }
