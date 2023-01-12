@@ -6,8 +6,6 @@ import jwt from 'jsonwebtoken'
 const saltRounds=10
 
 export const reg=async (req,res)=>{
-    // if (error) return res.status(400).send(error.details[0].message);
-
     let email=req.body.email
     let exUser=await User.findOne({email:email})
     if(exUser){
