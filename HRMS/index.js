@@ -3,6 +3,8 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose'
 import user from "./routers/userRouter.js"
 import menu from "./routers/menuRouter.js"
+import role from "./routers/roleRouter.js"
+import rolemenu from "./routers/roleMenuRouter.js";
 
 import dotenv from "dotenv"
     
