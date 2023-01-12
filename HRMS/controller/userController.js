@@ -2,6 +2,7 @@ import User from "../models/userModel.js"
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import CurrentCompany from "../models/currentComModel.js";
 
 const saltRounds=10;
 dotenv.config();
@@ -34,15 +35,38 @@ export const reg=async (req,res)=>{
     }    
 }
 
-//-------- Update the User
+// Update the User
 export const updateUser= async (req, res) => {
     try {
         const user = await User.findByIdAndUpdate(req.body.id, {$set: req.body},{new:true})
-        res.status(200).json({meesage:"update success"})
+        res.status(200).json({meesage:"Updated successfully"})
     } catch (error) {
         res.status(400).json({message:error.message});
     }
 }
+
+// Adding User's Current Company Details
+
+export const currentCompany=async(req,res)=>{
+    try {
+        const company=new CurrentCompany({
+            userId:req.body.userId,
+            detaprment:req.body.detaprment,
+            designation:req.body.designation,
+            role:req.body.role,
+            salary:req.body.salary,
+            joiningDate:req.body.joiningDate,
+            reportedTo:req.body.reportedTo,
+            isFreasher:req.body.isFreasher
+        })
+        await company.save()
+        res.status(201).json({message:"Company details added"})
+    } catch (error) {
+        res.status(400).json({message:error.message});
+    }
+}
+
+
 
 export const ownerReg=async (req,res)=>{
     let email=req.body.email

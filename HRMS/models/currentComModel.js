@@ -24,6 +24,10 @@ const CurrentCompany = mongoose.model('CurrentCompany', new mongoose.Schema({
     reportedTo: {
         type: String,
     },
+    isFreasher:{
+        type: Boolean,
+        default: false
+    }
 
 }, {
     timestamps: true,
