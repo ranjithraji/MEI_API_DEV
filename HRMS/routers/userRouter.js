@@ -2,6 +2,7 @@ import express from "express";
 import { login, reg ,getAll, ownerReg} from "../controller/userController.js";
 import auth from "../middleware/auth.js";
 import authOwner from "../middleware/owner.js";
+
 const router = express.Router();
 
 router.post("/login",login)
