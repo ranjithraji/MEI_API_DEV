@@ -25,9 +25,6 @@ app.use("/api/user",user)
 
 app.use("/api/rolemenu",rolemenu)
 
-app.listen(port,()=>{
-    console.log("Server connected to" + port);
-
 app.use("/api/role",role)
 app.use("/api/menu",menu)
 
