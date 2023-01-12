@@ -17,7 +17,6 @@ export  const getmenu=async(req,res)=>{
     try {
         const menu= await Menu.find()
         if(!menu) return res.send({mesage:"Sorry no menu"})
-
         res.status(200).send({data:menu})
     } catch (error) {
         res.status(400).send({message:error.message});
@@ -40,7 +39,7 @@ export const updatemenu=async(req,res)=>{
         const menuName = req.body.menuName
         const menuCode= req.body.menuCode 
         let xmenu = await Menu.findByIdAndUpdate({_id:req.params.id},{$set:req.body},{new:true})
-        if(!xmenu) return res.send({message:`sorry, there is no field in ${menuName}`})
+        if(!xmenu) return res.staus(200).send({message:`sorry, there is no field in ${menuName}`})
         res.status(200).send({message:"Menu Updated"})
     } catch (error) {
         res.status(400).send({message:error.message});
