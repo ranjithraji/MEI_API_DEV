@@ -32,8 +32,8 @@ export const reg=async (req,res)=>{
         })  
     }    
 }
-export const ownerReg=async (req,res)=>{
 
+export const ownerReg=async (req,res)=>{
     let email=req.body.email
     let exUser=await User.findOne({email:email})
     if(exUser){
@@ -85,5 +85,4 @@ export const login=async(req,res)=>{
 export const getAll=async(req,res)=>{
     const getUser=await User.find()
     res.send(getUser)
-    
-} 
+}

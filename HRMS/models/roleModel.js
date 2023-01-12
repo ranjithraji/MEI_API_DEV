@@ -7,7 +7,7 @@ const role=new mongoose.Schema({
     },
     code:{
         type:String,
-        required:true8
+        required:true
     },
     isActive:{
         type:Boolean,
