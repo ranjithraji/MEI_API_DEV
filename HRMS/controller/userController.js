@@ -1,8 +1,8 @@
 import User from "../models/userModel.js"
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
+
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import CurrentCompany from "../models/currentComModel.js";
 
 const saltRounds=10;
 dotenv.config();
@@ -11,7 +11,7 @@ export const reg=async (req,res)=>{
     let email=req.body.email
     let exUser=await User.findOne({email:email})
     if(exUser){
-        return res.status(400).json({message:"email exists please login"})
+        return res.send("email exists please login")
     }
     else{
         bcrypt.hash(req.body.password,saltRounds,async(err,hash)=>{
@@ -27,52 +27,31 @@ export const reg=async (req,res)=>{
             })
             try {
                 await register.save()
-                res.status(201).json({message:"Register success"})
+                res.status(201).send("register")
             } catch (error) {
-                res.status(400).json({message:error.message});
+                res.status(400).send(error.message);
             }
         })  
     }    
 }
 
-// Update the User
+//-------- Update the User
 export const updateUser= async (req, res) => {
     try {
-        const user = await User.findByIdAndUpdate(req.body.id, {$set: req.body},{new:true})
-        res.status(200).json({meesage:"Updated successfully"})
+        const user = await User.findByIdAndUpdate(req.body.id, {$set: req.body})
+        res.status(200).send(user)
     } catch (error) {
-        res.status(400).json({message:error.message});
+        res.status(400).send(error.message);
     }
 }
-
-// Adding User's Current Company Details
-
-export const currentCompany=async(req,res)=>{
-    try {
-        const company=new CurrentCompany({
-            userId:req.body.userId,
-            detaprment:req.body.detaprment,
-            designation:req.body.designation,
-            role:req.body.role,
-            salary:req.body.salary,
-            joiningDate:req.body.joiningDate,
-            reportedTo:req.body.reportedTo,
-            isFreasher:req.body.isFreasher
-        })
-        await company.save()
-        res.status(201).json({message:"Company details added"})
-    } catch (error) {
-        res.status(400).json({message:error.message});
-    }
-}
-
 
 
 export const ownerReg=async (req,res)=>{
+
     let email=req.body.email
     let exUser=await User.findOne({email:email})
     if(exUser){
-        return res.json({message:"email exists please login"})
+        return res.send("email exists please login")
     }
     else{
         bcrypt.hash(req.body.password,saltRounds,async(err,hash)=>{
@@ -89,9 +68,9 @@ export const ownerReg=async (req,res)=>{
             })
             try {
                 await register.save()
-                res.status(201).json({meesage:"Owner Register success"})
+                res.status(201).send("Owner Register success")
             } catch (error) {
-                res.status(400).json({message:error.message});
+                res.status(400).send(error.message);
             }
         })  
     }    
@@ -100,36 +79,39 @@ export const ownerReg=async (req,res)=>{
 export const login=async(req,res)=>{
     let email=req.body.email
     let foundUser=await User.findOne({email:email})
+    console.log(foundUser?.password);
     if(foundUser){
         bcrypt.compare(req.body.password,foundUser.password,(err,result)=>{
+            // console.log(err);
             if(result){
                 const token=jwt.sign({id:foundUser?._id,isOwner:foundUser?.isOwner},process.env.JWT)
-                res.header("hrms-auth-token",token).json({message:"login successfully",token:token})
+                res.header("hrms-auth-token",token).send("logged successfully")
             }else{
-                res.status(400).json({message:"please enter correct password"})
+                res.status(400).send("please enter correct password!!!")
             }
         })
+        
     }else{
-        res.status(400).json({message:error.message})
+        res.status(400).send("Your are not a authorized person")
     }
 }
 
-export const deleteUser = async (req, res) => {
+ export const deleteUser = async (req, res) => {
+  
     let email=req.body.email
-    try {
-        const user = await User.findOneAndRemove({ email:email });
-        if (!user) return res.status(404).json({message:'User not found'});
-        res.status(200).json({data:user});
-    } catch (error) {
-        res.status(400).json({message:error.message});
-    }
+  const user = await User.findOneAndRemove({ email:email });
+
+  if (!user) return res.status(404).send({message:'The user with the given ID was not found.'});
+
+  res.send(user);
 };
 
+//update userEducation details
+
+
+
+
 export const getAll=async(req,res)=>{
-    try {
-        const getUser=await User.find()
-        res.status(200).json({data:getUser})
-    } catch (error) {
-        res.status(400).json({message:error.message});
-    }
+    const getUser=await User.find()
+    res.send(getUser)
 }
