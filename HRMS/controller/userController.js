@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv';
 
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import Address from "../models/adddressModule.js";
 
 const saltRounds=10;
 dotenv.config();
@@ -39,7 +40,7 @@ export const reg=async (req,res)=>{
 export const updateUser= async (req, res) => {
     try {
         const user = await User.findByIdAndUpdate(req.body.id, {$set: req.body})
-        res.status(200).send(user)
+        res.status(200).json({meesage:"update success"})
     } catch (error) {
         res.status(400).send(error.message);
     }
@@ -106,12 +107,66 @@ export const login=async(req,res)=>{
   res.send(user);
 };
 
-//update userEducation details
-
-
-
+export const profile=async(req, res) => {
+    try {
+        const view= await User.find({_id:req.user.id})
+        res.status(200).json({data:view})
+    } catch (error) {
+        res.status(400).json({message:error.message});
+    }
+    
+}
 
 export const getAll=async(req,res)=>{
-    const getUser=await User.find()
-    res.send(getUser)
+    try {
+        const getUser=await User.find()
+        res.status(200).json({data:getUser})
+    } catch (error) {
+        res.status(400).json({message:error.message});
+    }
+}
+
+export const createAddress=async(req,res)=>{
+    try {
+        const id= req.body.id;
+        let Xuser= await User.findById({_id:id});
+        if(!Xuser) return res.status(200).json({message:"No user"})
+        // console.log(Xuser);
+        let newAddress=await new Address({
+            userId:id,
+            address1:req.body.address1,
+            address2:req.body.address2,
+            city:req.body.city,
+            state:req.body.state,
+            country:req.body.country,
+            postalCode:req.body.postalCode
+        })
+        await newAddress.save()
+        res.status(200).json({message:"Address Added"})
+    } catch (error) {
+        res.status(400).json({message:error.message})
+    }
+}
+
+export const updateAddress=async(req,res)=>{
+    try {
+        const id = req.body.id;
+        let Xuser= await Address.findOne({userId:id})
+        if(!Xuser) return res.status(200).json({message:"No User"})
+        await Address.updateOne({$set:req.body})
+        res.status(200).json({message:"Address Updated"})
+    } catch (error) {
+        res.status(400).json({message:error.message})
+    }
+}
+
+export const viewUserAddress=async(req,res)=>{
+    try {
+        const id = req.params.id;
+        let Xuser= await Address.findOne({userId:id})
+        if(!Xuser) return res.status(200).json({message:"No User"})
+        res.status(200).json({data:Xuser})
+    } catch (error) {
+        res.status(400).json({message:error.message})
+    }
 }
