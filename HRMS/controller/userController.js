@@ -101,6 +101,16 @@ export const deleteUser = async (req, res) => {
     }
 };
 
+export const profile=async(req, res) => {
+    try {
+        const view= await User.find({_id:req.user.id})
+        res.status(200).json({data:view})
+    } catch (error) {
+        res.status(400).json({message:error.message});
+    }
+    
+}
+
 export const getAll=async(req,res)=>{
     try {
         const getUser=await User.find()
