@@ -30,5 +30,5 @@ const rolemenu=new mongoose.Schema({
     },
 });
 
-const RolemenuAccess=mongoose.model('RoleMenu',rolemenu)
+const RolemenuAccess=mongoose.model('Rolemenu',rolemenu)
 export default RolemenuAccess;

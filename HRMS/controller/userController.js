@@ -99,5 +99,4 @@ export const login=async(req,res)=>{
 export const getAll=async(req,res)=>{
     const getUser=await User.find()
     res.send(getUser)
-    
-} 
+}
