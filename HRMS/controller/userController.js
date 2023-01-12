@@ -37,7 +37,7 @@ export const reg=async (req,res)=>{
 //-------- Update the User
 export const updateUser= async (req, res) => {
     try {
-        const user = await User.findByIdAndUpdate(req.body.id, {$set: req.body},{new:true})
+        const user = await User.findByIdAndUpdate(req.body.id, {$set: req.body})
         res.status(200).json({meesage:"update success"})
     } catch (error) {
         res.status(400).json({message:error.message});
