@@ -1,6 +1,6 @@
 import Menu from '../models/menuModel.js'
 
-const createMenu=async(req,res)=>{
+export const createMenu=async(req,res)=>{
     try {
         const data =await new Menu({
             menuName:req.body.menuName,
@@ -13,7 +13,7 @@ const createMenu=async(req,res)=>{
     }
 }
 
-const getmenu=async(req,res)=>{
+export  const getmenu=async(req,res)=>{
     try {
         const menu= await Menu.find()
         if(!menu) return res.send({mesage:"Sorry no menu"})
@@ -24,7 +24,7 @@ const getmenu=async(req,res)=>{
     }
 }
 
-const deletemenu=async(req,res)=>{
+export const deletemenu=async(req,res)=>{
     try {
         const menuName = req.body.menuName;
         let xmenu= await Menu.findOneAndDelete({menuName:menuName})
@@ -35,7 +35,7 @@ const deletemenu=async(req,res)=>{
     }
 }
 
-const updatemenu=async(req,res)=>{
+export const updatemenu=async(req,res)=>{
     try {
         const menuName = req.body.menuName
         const menuCode= req.body.menuCode 
@@ -48,4 +48,4 @@ const updatemenu=async(req,res)=>{
 }
 
 
-export default {createMenu, getmenu, deletemenu, updatemenu}
+

@@ -1,6 +1,6 @@
 import Role from '../models/roleModel.js'
 
-const createRole=async(req,res)=>{
+export const createRole=async(req,res)=>{
     try {
         const data =await new Role({
             roleType:req.body.roleType,
@@ -13,7 +13,7 @@ const createRole=async(req,res)=>{
     }
 }
 
-const getRole=async(req,res)=>{
+export const getRole=async(req,res)=>{
     try {
         const role= await Role.find()
         if(!role) return res.send({message:"Sorry no Data"})
@@ -24,7 +24,7 @@ const getRole=async(req,res)=>{
     }
 }
 
-const deleteRole=async(req,res)=>{
+export const deleteRole=async(req,res)=>{
     try {
         const roleType = req.body.roleType;
         let xmenu= await Role.findOneAndDelete({roleType:roleType})
@@ -35,7 +35,7 @@ const deleteRole=async(req,res)=>{
     }
 }
 
-const updateRole=async(req,res)=>{
+export const updateRole=async(req,res)=>{
     try {
         const roleType = req.body.roleType
         const code= req.body.code 
@@ -49,4 +49,3 @@ const updateRole=async(req,res)=>{
 
 
 
-export default {createRole, getRole, deleteRole,updateRole}
