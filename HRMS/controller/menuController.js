@@ -40,13 +40,11 @@ export const updatemenu=async(req,res)=>{
         const menuName = req.body.menuName
         const menuCode= req.body.menuCode 
         let xmenu = await Menu.findByIdAndUpdate({_id:req.params.id},{$set:req.body},{new:true})
-<<<<<<<<< Temporary merge branch 1
+
         if(!xmenu) return res.status(200).json({message:`sorry, there is no field in ${menuName}`})
         res.status(200).json({message:"Menu Updated"})
-=========
-        if(!xmenu) return res.staus(200).send({message:`sorry, there is no field in ${menuName}`})
-        res.status(200).send({message:"Menu Updated"})
->>>>>>>>> Temporary merge branch 2
+
+
     } catch (error) {
         res.status(400).json({message:error.message});
     }
