@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const Education=mongoose.model('Education',new mongoose.Schema({
+const education=new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -71,7 +71,8 @@ const Education=mongoose.model('Education',new mongoose.Schema({
 {
     timestamps: true,
 }
-));
+);
 
+const Education=mongoose.model('Education',education)
 export default Education;
 

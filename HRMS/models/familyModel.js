@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const Family = mongoose.model('Family', new mongoose.Schema({
+const family = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -31,5 +31,7 @@ const Family = mongoose.model('Family', new mongoose.Schema({
     ]
 }, {
     timestamps: true,
-}));
+});
+
+const Family=mongoose.model('Family',family)
 export default Family;
