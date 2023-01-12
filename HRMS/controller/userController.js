@@ -35,7 +35,7 @@ export const reg=async (req,res)=>{
     }    
 }
 
-//-------- Update the User
+// Update the User
 export const updateUser= async (req, res) => {
     try {
         const user = await User.findByIdAndUpdate(req.body.id, {$set: req.body})
