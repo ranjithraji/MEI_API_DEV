@@ -24,7 +24,7 @@ const Document = mongoose.model('Document', new mongoose.Schema({
     },
     identificationDetails: {
         adhaarNo: {
-            type: Number,
+            type: String ,
         },
         panNo: {
             type: String,
