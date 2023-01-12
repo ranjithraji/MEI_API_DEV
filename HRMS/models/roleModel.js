@@ -11,7 +11,7 @@ const role=new mongoose.Schema({
     },
     isActive:{
         type:Boolean,
-        default:false
+        default:true
       },
     isBlock:{
         type:Boolean,
@@ -19,5 +19,5 @@ const role=new mongoose.Schema({
       }
 });
 
-const Role=mongoose.model('User',role)
+const Role=mongoose.model('Role',role)
 export default Role;

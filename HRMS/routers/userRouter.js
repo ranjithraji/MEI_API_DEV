@@ -9,4 +9,5 @@ router.post("/v1/ownerReg",ownerReg)
 router.post("/v2/reg",[auth,authOwner],reg)
 router.get("/get",[auth,authOwner],getAll)  
 
+
 export default router

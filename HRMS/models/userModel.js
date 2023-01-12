@@ -1,5 +1,4 @@
-import mongoose from "mongoose";
-
+import mongoose, { Mongoose, SchemaType } from "mongoose";
 
 const user =  new mongoose.Schema({
     firstName:{
@@ -42,6 +41,10 @@ const user =  new mongoose.Schema({
     isOwner:{
         type:Boolean,
         default:false
+    },
+    role:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Role',
     },
     educationDetails:{
         sslc:{
