@@ -124,7 +124,7 @@ export const getAll=async(req,res)=>{
 
 export const createAddress=async(req,res)=>{
     try {
-        const id= req.body.id;
+        const id= req.query.id;
         let Xuser= await User.findById({_id:id});
         if(!Xuser) return res.status(200).json({message:"No user"})
         // console.log(Xuser);
@@ -146,7 +146,7 @@ export const createAddress=async(req,res)=>{
 
 export const updateAddress=async(req,res)=>{
     try {
-        const id = req.body.id;
+        const id = req.query.id;
         let Xuser= await Address.findOne({userId:id})
         if(!Xuser) return res.status(200).json({message:"No User"})
         await Address.updateOne({$set:req.body})
@@ -158,7 +158,7 @@ export const updateAddress=async(req,res)=>{
 
 export const viewUserAddress=async(req,res)=>{
     try {
-        const id = req.params.id;
+        const id = req.query.id;
         let Xuser= await Address.findOne({userId:id})
         if(!Xuser) return res.status(200).json({message:"No User"})
         res.status(200).json({data:Xuser})
