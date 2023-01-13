@@ -1,4 +1,5 @@
 import User from "../models/userModel.js"
+import Family from "../models/familyModel.js";
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
@@ -38,7 +39,7 @@ export const reg=async (req,res)=>{
 export const updateUser= async (req, res) => {
     try {
         const user = await User.findByIdAndUpdate(req.body.id, {$set: req.body})
-        res.status(200).json({meesage:"update success"})
+        res.status(200).json({message:"update success"})
     } catch (error) {
         res.status(400).json({message:error.message});
     }
@@ -65,7 +66,7 @@ export const ownerReg=async (req,res)=>{
             })
             try {
                 await register.save()
-                res.status(201).json({meesage:"Owner Register success"})
+                res.status(201).json({message:"Owner Register success"})
             } catch (error) {
                 res.status(400).json({message:error.message});
             }
@@ -119,3 +120,63 @@ export const getAll=async(req,res)=>{
         res.status(400).json({message:error.message});
     }
 }
+
+
+// user Family Details CRU
+
+export const UserFam=async(req,res)=>{
+    try {
+        let id= req.query.id;
+    let Xuser= await User.findById({_id:id});
+    if(!Xuser) return res.status(200).json({message:"No user found"})
+
+    let userFamily=  new Family({
+        userId:id,
+        name:req.body.name,
+        relationship:req.body.relationship,
+        occupation:req.body.occupation,
+        dob:req.body.dob,
+        adhaarNo:req.body.adhaarNo,
+        emergencyContact:req.body.emergencyContact        
+    })
+
+    await userFamily.save();
+    res.status(200).json({message:"Family member added"})
+    } catch (error) {
+        res.status(400).json({message:error.message})
+    }
+    
+}
+
+export const updateFam= async (req, res) => {
+    try {
+        await Family.findByIdAndUpdate({_id:req.body.id},{$set:req.body});
+        res.status(201).json({message:"update success"});
+    } catch (error) {
+        res.status(400).json({message:error.message});
+    }
+}
+
+export const getFam=async(req,res)=>{
+    try {
+        let id= req.query.id;
+        let Xuser= await User.findById({_id:id});
+        if(!Xuser) return res.status(200).json({message:"No user found"})
+        const getFam=await Family.find()
+        res.status(200).json({data:getFam})
+    } catch (error) {
+        res.status(400).json({message:error.message});
+    }
+}
+
+
+export const deleteFam = async (req, res) => {
+    let id= req.query.id;
+    try {
+        const user = await Family.findOneAndRemove({_id:id });
+        if (!user) return res.status(404).json({message:'User not found'});
+        res.status(200).json({data:user});
+    } catch (error) {
+        res.status(400).json({message:error.message});
+    }
+};

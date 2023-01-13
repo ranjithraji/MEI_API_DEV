@@ -5,30 +5,25 @@ const family = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
-    members: [
-        {
-            name: {
-                type: String,
-            },
-            relationship: {
-                type: String,
-            },
-            occupation: {
-                type: String,
-            },
-            dob: {
-                type: String,
-            },
-            adhaarNo: {
-                type: Number,
-            },
-            emergencyContact: {
-                type: Number,
-            },
-
-        }
-
-    ]
+    name: {
+        type: String,
+    },
+    relationship: {
+        type: String,
+    },
+    occupation: {
+        type: String,
+    },
+    dob: {
+        type: String,
+    },
+    adhaarNo: {
+        type: Number,
+    },
+    emergencyContact: {
+        type: Number,
+    }, 
+   
 }, {
     timestamps: true,
 });
