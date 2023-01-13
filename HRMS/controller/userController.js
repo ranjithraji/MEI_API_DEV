@@ -138,7 +138,7 @@ export const getAll = async (req, res) => {
 
 export const currentCompany = async (req, res) => {
     try {
-        const existUser = await CurrentCompany.findById({ userId: req.body.userId })
+        const existUser = await CurrentCompany.findById({ userId: req.params.userId })
         if (existUser) {
             return res.status(400).json({ message: "This user details already exists" })
         }
@@ -164,7 +164,7 @@ export const currentCompany = async (req, res) => {
 
 export const currentCompanyView = async (req, res) => {
     try {
-        const company = await CurrentCompany.find({ userId: req.body.userId })//.populate('role').populate('userId')
+        const company = await CurrentCompany.find({ userId: req.query.userId })//.populate('role').populate('userId')
         if (!company) {
             return res.status(400).json({ message: "No company details found" })
         }
@@ -178,7 +178,7 @@ export const currentCompanyView = async (req, res) => {
 
 export const currentCompanyUpdate = async (req, res) => {
     try {
-        const company = await CurrentCompany.findByIdAndUpdate(req.body.id, { $set: req.body })
+        const company = await CurrentCompany.findByIdAndUpdate(req.query.id, { $set: req.body })
         if (!company) {
             return res.status(400).json({ message: "No company details found" })
         }
@@ -193,7 +193,7 @@ export const currentCompanyUpdate = async (req, res) => {
 export const addDocument = async (req, res) => {
     try {
         const user = await Document.findOne({
-            userId: req.body.userId
+            userId: req.query.userId
         })
         if (user) {
             return res.status(400).json({ message: "Document details already exists" })
@@ -233,7 +233,7 @@ export const addDocument = async (req, res) => {
 
 export const viewDocument = async (req, res) => {
     try {
-        const document = await Document.find({ userId: req.body.userId })//.populate('userId')
+        const document = await Document.find({ userId: req.query.userId })//.populate('userId')
         if (!document) {
             return res.status(400).json({ message: "No document details found" })
         } else {
@@ -248,7 +248,7 @@ export const viewDocument = async (req, res) => {
 
 export const updateDocument = async (req, res) => {
     try {
-        const document = await Document.findByIdAndUpdate(req.body.id, {
+        const document = await Document.findByIdAndUpdate(req.query .id, {
             $set: {
                 bankDetails: {
                     accountNo: req.body.accountNo,
