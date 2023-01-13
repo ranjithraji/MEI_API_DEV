@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken'
 import { checkAccessCreate } from "../config/checkAccess.js";
 import Address from "../models/addressModel.js";
 
-const saltRounds=10;
+const saltRounds = 10;
 dotenv.config();
 
 export const reg=async (req,res)=>{
@@ -35,7 +35,7 @@ export const reg=async (req,res)=>{
             })
             try {
                 await register.save()
-                res.status(201).json({message:"register"})
+                res.status(201).json({ message: "Register success" })
             } catch (error) {
                 res.status(400).json({message:error.message});
             }
@@ -54,64 +54,291 @@ export const updateUser= async (req, res) => {
 }
 
 
-export const ownerReg=async (req,res)=>{
+// Adding User's Current Company Details 
 
-    let email=req.body.email
-    let exUser=await User.findOne({email:email})
-    if(exUser){
-        return res.json({message:"email exists please login"})
+export const currentCompany = async (req, res) => {
+    try {
+        const existUser = await CurrentCompany.findById({ userId: req.body.userId })
+        if (existUser) {
+            return res.status(400).json({ message: "This user details already exists" })
+        }
+
+        const company = new CurrentCompany({
+            userId: req.body.userId,
+            detaprment: req.body.detaprment,
+            designation: req.body.designation,
+            role: req.body.role,
+            salary: req.body.salary,
+            joiningDate: req.body.joiningDate,
+            reportedTo: req.body.reportedTo,
+            isFreasher: req.body.isFreasher
+        })
+        await company.save()
+        res.status(201).json({ message: "Company details added" })
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-    else{
-        bcrypt.hash(req.body.password,saltRounds,async(err,hash)=>{
-            let register=new User({
-                email:req.body.email,
-                password:hash,
-                firstName:req.body.firstName,
-                lastName:req.body.lastName,
-                dob:req.body.dob,
-                gender:req.body.gender,
-                bloodGroup:req.body.bloodGroup,
-                mobileNo:req.body.mobileNo,
-                isOwner:true
+}
+
+// View user's current company details
+
+export const currentCompanyView = async (req, res) => {
+    try {
+        const company = await CurrentCompany.find({ userId: req.body.userId })//.populate('role').populate('userId')
+        if (!company) {
+            return res.status(400).json({ message: "No company details found" })
+        }
+        res.status(200).json(company)
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+// Update user's current company details
+
+export const currentCompanyUpdate = async (req, res) => {
+    try {
+        const company = await CurrentCompany.findByIdAndUpdate(req.body.id, { $set: req.body })
+        if (!company) {
+            return res.status(400).json({ message: "No company details found" })
+        }
+        res.status(200).json({ message: "Company Details Updated successfully" })
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+// Add Document Details
+
+export const addDocument = async (req, res) => {
+    try {
+        const user = await Document.findOne({
+            userId: req.body.userId
+        })
+        if (user) {
+            return res.status(400).json({ message: "Document details already exists" })
+        }
+
+        const document = new Document({
+            userId: req.body.userId,
+            bankDetails: {
+                accountNo: req.body.accountNo,
+                ifsc: req.body.ifsc,
+                branch: req.body.branch,
+                bankName: req.body.bankName,
+                name: req.body.name,
+            },
+            identificationDetails: {
+                adhaarNo: req.body.adharNo,
+                panNo: req.body.panNo,
+                passportNo: req.body.passportNo,
+                uanNo: req.body.uanNo,
+                pfNo: req.body.pfNo,
+                esicNo: req.body.esicNo,
+            },
+            medicalDetails: {
+                vaccination1Date: req.body.vaccination1Date,
+                vaccination2Date: req.body.vaccination2Date,
+            }
+
+        })
+        await document.save()
+        res.status(201).json({ message: "Document details added" })
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+// View Document Details
+
+export const viewDocument = async (req, res) => {
+    try {
+        const document = await Document.find({ userId: req.body.userId })//.populate('userId')
+        if (!document) {
+            return res.status(400).json({ message: "No document details found" })
+        } else {
+            return res.status(200).json(document)
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+// Update Document Details
+
+export const updateDocument = async (req, res) => {
+    try {
+        const document = await Document.findByIdAndUpdate(req.body.id, {
+            $set: {
+                bankDetails: {
+                    accountNo: req.body.accountNo,
+                    ifsc: req.body.ifsc,
+                    branch: req.body.branch,
+                    bankName: req.body.bankName,
+                    name: req.body.name,
+                },
+                identificationDetails: {
+                    adhaarNo: req.body.adharNo,
+                    panNo: req.body.panNo,
+                    passportNo: req.body.passportNo,
+                    uanNo: req.body.uanNo,
+                    pfNo: req.body.pfNo,
+                    esicNo: req.body.esicNo,
+                },
+                medicalDetails: {
+                    vaccination1Date: req.body.vaccination1Date,
+                    vaccination2Date: req.body.vaccination2Date,
+                }
+
+            }
+        })
+        if (!document) {
+            return res.status(400).json({ message: "No document details found" })
+        }
+        res.status(200).json({ message: "Document Details Updated successfully" })
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+// Add user's previous company details
+
+export const addPreviousCompany = async (req, res) => {
+    try {
+        const company = {
+            companyName: req.body.companyName,
+            designation: req.body.designation,
+            description: req.body.description,
+            salary: req.body.salary,
+            startDate: req.body.startDate,
+            endDate: req.body.endDate,
+            experience: req.body.experience,
+        }
+        const newExperience = new Experience({
+            userId: req.body.userId,
+            previewsCompanies: []
+        })
+        const user = await Experience.findOne({
+            userId: req.body.userId
+        })
+        if (user) {
+            user.previewsCompanies.push(company)
+            await user.save()
+            return res.status(201).json({ message: "Experience details added" })
+        } else {
+            newExperience.previewsCompanies.push(company)
+            await newExperience.save()
+            return res.status(201).json({ message: "Experience details added" })
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+
+    }
+}
+
+// View user's previous company details
+
+export const viewPreviousCompany = async (req, res) => {
+    try {
+        const company = await Experience.find({ userId: req.body.userId })//.populate('userId')
+        if (!company) {
+            return res.status(400).json({ message: "No company details found" })
+        } else {
+            return res.status(200).json(company) //.map((item) => item.previewsCompanies)
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+
+}
+
+// Update user's previous company details
+
+export const previousCompanyUpdate = async (req, res) => {
+    try {
+        const user = await Experience.findOne({ userId: req.body.userId })
+        if (!user) {
+            return res.status(400).json({ message: "No company details found in this user" })
+        } else {
+            const company = user.previewsCompanies.id(req.body.id)
+            if (!company) {
+                return res.status(400).json({ message: "No company details found" })
+            } else {
+                company.companyName = req.body.companyName
+                company.designation = req.body.designation
+                company.description = req.body.description
+                company.salary = req.body.salary
+                company.startDate = req.body.startDate
+                company.endDate = req.body.endDate
+                company.experience = req.body.experience
+                await user.save()
+                return res.status(200).json({ message: "Company details updated" })
+            }
+            
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+
+    }
+}
+
+
+
+export const ownerReg = async (req, res) => {
+    let email = req.body.email
+    let exUser = await User.findOne({ email: email })
+    if (exUser) {
+        return res.json({ message: "email exists please login" })
+    }
+    else {
+        bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
+            let register = new User({
+                email: req.body.email,
+                password: hash,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                dob: req.body.dob,
+                gender: req.body.gender,
+                bloodGroup: req.body.bloodGroup,
+                mobileNo: req.body.mobileNo,
+                isOwner: true
             })
             try {
                 await register.save()
-                res.status(201).json({message:"Owner Register success"})
+                res.status(201).json({ meesage: "Owner Register success" })
             } catch (error) {
-                res.status(400).json({message:error.message});
-            }
-        })  
-    }    
-}
-
-export const login=async(req,res)=>{
-    let email=req.body.email
-    let foundUser=await User.findOne({email:email})
-    console.log(foundUser?.password);
-    if(foundUser){
-        bcrypt.compare(req.body.password,foundUser.password,(err,result)=>{
-            // console.log(err);
-            if(result){
-                const token=jwt.sign({id:foundUser?._id},process.env.JWT)
-                res.header("hrms-auth-token",token).json({message:"login successfully",token:token})
-            }else{
-                res.status(400).json({message:"please enter correct password!!!"})
+                res.status(400).json({ message: error.message });
             }
         })
-        
-    }else{
-        res.status(400).json({message:"Email not found"})
     }
 }
 
- export const deleteUser = async (req, res) => {
-  
-    let email=req.body.email
-  const user = await User.findOneAndRemove({ email:email });
+export const login = async (req, res) => {
+    let email = req.body.email
+    let foundUser = await User.findOne({ email: email })
+    if (foundUser) {
+        bcrypt.compare(req.body.password, foundUser.password, (err, result) => {
+            if (result) {
+                const token = jwt.sign({ id: foundUser?._id, isOwner: foundUser?.isOwner }, process.env.JWT)
+                res.header("hrms-auth-token", token).json({ message: "login successfully", token: token })
+            } else {
+                res.status(400).json({ message: "please enter correct password" })
+            }
+        })
+    } else {
+        res.status(400).json({ message: error.message })
+    }
+}
 
-  if (!user) return res.status(404).json({message:'The user with the given ID was not found.'});
-
-  res.json(user);
+export const deleteUser = async (req, res) => {
+    let email = req.body.email
+    try {
+        const user = await User.findOneAndRemove({ email: email });
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        res.status(200).json({ data: user });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
 };
 
 export const profile=async(req, res) => {
@@ -124,12 +351,12 @@ export const profile=async(req, res) => {
     
 }
 
-export const getAll=async(req,res)=>{
+export const getAll = async (req, res) => {
     try {
-        const getUser=await User.find()
-        res.status(200).json({data:getUser})
+        const getUser = await User.find()
+        res.status(200).json({ data: getUser })
     } catch (error) {
-        res.status(400).json({message:error.message});
+        res.status(400).json({ message: error.message });
     }
 }
 
