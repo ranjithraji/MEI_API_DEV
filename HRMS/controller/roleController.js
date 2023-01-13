@@ -39,7 +39,7 @@ export const updateRole=async(req,res)=>{
     try {
         const roleType = req.body.roleType
         const code= req.body.code 
-        let xrole = await Role.findByIdAndUpdate({_id:req.query.id},{$set:req.body},{new:true})
+        let xrole = await Role.findByIdAndUpdate({_id:req.params.id},{$set:req.body},{new:true})
         if(!xrole) return res.status(200).json({message:`sorry, there is no field`})
         res.status(200).json({message:"Menu Updated"})
     } catch (error) {
