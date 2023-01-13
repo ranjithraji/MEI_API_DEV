@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/create_role",createRole)
 router.get("/view_role",getRole)
-router.put("/update_role/:id",updateRole)
+router.put("/update_role",updateRole)
 router.delete("/delete_role",deleteRole)
 
 
