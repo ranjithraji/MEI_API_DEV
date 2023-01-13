@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { checkAccessCreate } from "../config/checkAccess.js";
+import Address from "../models/addressModel.js";
 
 const saltRounds=10;
 dotenv.config();
@@ -187,3 +188,50 @@ export const deleteFam = async (req, res) => {
         res.status(400).json({message:error.message});
     }
 };
+
+
+//Address CRU
+export const createAddress=async(req,res)=>{
+    try {
+        const id= req.query.id;
+        let Xuser= await User.findById({_id:id});
+        if(!Xuser) return res.status(200).json({message:"No user"})
+        // console.log(Xuser);
+        let newAddress=await new Address({
+            userId:id,
+            address1:req.body.address1,
+            address2:req.body.address2,
+            city:req.body.city,
+            state:req.body.state,
+            country:req.body.country,
+            postalCode:req.body.postalCode
+        })
+        await newAddress.save()
+        res.status(200).json({message:"Address Added"})
+    } catch (error) {
+        res.status(400).json({message:error.message})
+    }
+}
+
+export const updateAddress=async(req,res)=>{
+    try {
+        const id = req.query.id;
+        let Xuser= await Address.findOne({userId:id})
+        if(!Xuser) return res.status(200).json({message:"No User"})
+        await Address.updateOne({$set:req.body})
+        res.status(200).json({message:"Address Updated"})
+    } catch (error) {
+        res.status(400).json({message:error.message})
+    }
+}
+
+export const viewUserAddress=async(req,res)=>{
+    try {
+        const id = req.query.id;
+        let Xuser= await Address.findOne({userId:id})
+        if(!Xuser) return res.status(200).json({message:"No User"})
+        res.status(200).json({data:Xuser})
+    } catch (error) {
+        res.status(400).json({message:error.message})
+    }
+}
