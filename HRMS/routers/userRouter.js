@@ -17,7 +17,7 @@ router.get("/v2/getbyid", [auth, authz], getFam)
 router.delete("/v2/deletefam", [auth, authz], deleteFam)
 
 router.post("/v2/reg", [auth, authz], reg)
-router.put("/v2/update", [auth, authz], updateUser)
+router.put("/v2/update/:id", [auth, authz], updateUser)
 router.delete("/v2/deleteUser", [auth, authz], deleteUser)
 router.get("/get", [auth, authz], getAll)
 
@@ -28,12 +28,12 @@ router.get("/v2/getaddress", [auth, authz], viewUserAddress)
 // Current Company Details------------
 router.post("/v2/addCurrentCompany", [auth, authz], currentCompany)
 router.get("/v2/viewCurrentCompany", [auth, authz], currentCompanyView)
-router.put("/v2/updateCurrentCompany", [auth, authz], currentCompanyUpdate)
+router.put("/v2/updateCurrentCompany/:id", [auth, authz], currentCompanyUpdate)
 
 // Documnet Details------------
 router.post("/v2/addDocumentDetails", [auth, authz], addDocument)
 router.get("/v2/viewDocumentDetails", [auth, authz], viewDocument)
-router.put("/v2/updateDocumentDetails", [auth, authz], updateDocument)
+router.put("/v2/updateDocumentDetails/:id", [auth, authz], updateDocument)
 
 // Experience Details------------
 router.post("/v2/addExperienceDetails", [auth, authz], addPreviousCompany)
