@@ -11,7 +11,7 @@ export const create = async (req, res) => {
     });
     try {
         await register.save();
-        res.status(201).json({message:"Register success"});
+        res.status(201).json({message:"Mapping success"});
     } catch (error) {
         res.status(400).json({message:error.message});
     }

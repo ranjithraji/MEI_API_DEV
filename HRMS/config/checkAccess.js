@@ -21,6 +21,7 @@ export const checkAccessGet=(user,menu)=>{
 export const checkAccessCreate=(user,menu)=>{
     let access
     if(menu==undefined) return access=undefined
+    // user.access?.map(i=>console.log(i.menu._id==menu));
     user.isOwner?access=true:user?.access?.map((item)=>{
         if(item?.menu?._id==menu){
             item?.create==true?access=true:access=false;

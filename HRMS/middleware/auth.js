@@ -18,7 +18,6 @@ async function auth(req,res,next){
         let user=await User.findById({_id:req.user.id}).populate("role")
         // console.log(user);
         req.user={...req.user,...{roleId:user.role._id,roleName:user.role.roleType,isOwner:user.isOwner}}
-        console.log(req.user)
         next(); 
     } catch (error) { 
         res.status(400).send("invalid token")

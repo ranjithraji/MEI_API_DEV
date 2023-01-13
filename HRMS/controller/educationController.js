@@ -3,9 +3,7 @@ import Education from "../models/educationModel.js"
 export const createEducation=async(req,res)=>{
     try {
        let id=req.query.userId      
-       console.log(id);
         let exUser= await Education.findOne({userId:id});
-         //console.log(exUser);
         if(exUser) return res.status(200).json({message:"Education details already added for this user"})
         let userEducation =  new Education({
             userId:id,
@@ -47,10 +45,7 @@ export const createEducation=async(req,res)=>{
 export const updateEducation=async(req,res)=>{
     try {
         const id = req.query.userId;
-        console.log(id);
         let exEducation= await Education.findOne({userId:id})
-        console.log(exEducation);
-        console.log(req.body);
         let obj={
             sslc:{
                 sslcSchoolName:req.body.sslcSchoolName || exEducation.sslc.sslcSchoolName,
@@ -81,7 +76,6 @@ export const updateEducation=async(req,res)=>{
           }
         if(!exEducation) return res.status(200).json({message:"No User"})
         await Education.findOneAndUpdate({userId:id},{$set:obj},{new:false})
-        console.log(req.params.id);
         res.status(200).json({message:"Education details Updated"})
     } catch (error) {
         res.status(400).json({message:error.message})

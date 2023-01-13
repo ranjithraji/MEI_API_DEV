@@ -16,9 +16,8 @@ export const reg = async (req, res) => {
     let email = req.body.email
     let menu = req.body.requestMenu
     let access = checkAccessCreate(req.user, menu)
-    console.log(access);
     if (access == false && !req.user.isOwner) return res.status(401).json({ message: "your not right person to do this" });
-    if (access == undefined) return res.status(400).json({ message: "something wrong" });
+    if (access == undefined && !req.user.isOwner) return res.status(400).json({ message: "something wrong" });
     let exUser = await User.findOne({ email: email })
     if (exUser) {
         return res.status(400).json({ message: "email already register" })
@@ -35,6 +34,7 @@ export const reg = async (req, res) => {
                 bloodGroup: req.body.bloodGroup,
                 mobileNo: req.body.mobileNo,
                 role: req.body.role,
+
             })
             try {
                 await register.save()
@@ -431,7 +431,6 @@ export const createAddress = async (req, res) => {
         const id = req.query.id;
         let Xuser = await User.findById({ _id: id });
         if (!Xuser) return res.status(200).json({ message: "No user" })
-        // console.log(Xuser);
         let newAddress = await new Address({
             userId: id,
             address1: req.body.address1,
