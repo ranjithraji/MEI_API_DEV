@@ -1,46 +1,43 @@
 import Education from "../models/educationModel.js"
-import User from "../models/userModel.js"
 
 export const createEducation=async(req,res)=>{
     try {
-       let id=req.params.id
-    let exUser= await Education.findOne({userId:id});
+       let id=req.query.userId      
+       console.log(id);
+        let exUser= await Education.findOne({userId:id});
          //console.log(exUser);
-  if
-  (exUser) return res.status(200).json({message:"Education details already added"})
-
-  
-    let userEducation =  new Education({
-        userId:id,
-        sslc:{
-            sslcSchoolName:req.body.sslcSchoolName,
-            sslcBoard:req.body.sslcBoard,
-            sslcYearOfPassing:req.body.sslcYearOfPassing,
-            sslcPercentage:req.body.sslcPercentage
-        },
-        hsc:{
-            hscSchoolName:req.body.hscSchoolName,
-            hscBoard:req.body.hscBoard,
-            hscYearOfPassing:req.body.hscYearOfPassing,
-            hscPercentage:req.body.hscPercentage
-        },
-        ug:{
-            ugUniversityName:req.body.ugUniversityName,
-            ugInstituteName:req.body.ugInstituteName,
-            ugDepartmentCourse:req.body.ugDepartmentCourse,
-            ugYearOfPassing:req.body.ugYearOfPassing,
-            ugCgpa:req.body.ugCgpa
-        },
-        pg:{
-            pgUniversityName:req.body.pgUniversityName,
-            pgInstituteName:req.body.pgInstituteName,
-            pgDepartmentCourse:req.body.pgDepartmentCourse,
-            pgYearOfPassing:req.body.pgYearOfPassing,
-            pgCgpa:req.body.pgCgpa
-        }
-    })
-    await userEducation.save();
-    res.status(200).json({message:"Education added"})
+        if(exUser) return res.status(200).json({message:"Education details already added for this user"})
+        let userEducation =  new Education({
+            userId:id,
+            sslc:{
+                sslcSchoolName:req.body.sslcSchoolName,
+                sslcBoard:req.body.sslcBoard,
+                sslcYearOfPassing:req.body.sslcYearOfPassing,
+                sslcPercentage:req.body.sslcPercentage
+            },
+            hsc:{
+                hscSchoolName:req.body.hscSchoolName,
+                hscBoard:req.body.hscBoard,
+                hscYearOfPassing:req.body.hscYearOfPassing,
+                hscPercentage:req.body.hscPercentage
+            },
+            ug:{
+                ugUniversityName:req.body.ugUniversityName,
+                ugInstituteName:req.body.ugInstituteName,
+                ugDepartmentCourse:req.body.ugDepartmentCourse,
+                ugYearOfPassing:req.body.ugYearOfPassing,
+                ugCgpa:req.body.ugCgpa
+            },
+            pg:{
+                pgUniversityName:req.body.pgUniversityName,
+                pgInstituteName:req.body.pgInstituteName,
+                pgDepartmentCourse:req.body.pgDepartmentCourse,
+                pgYearOfPassing:req.body.pgYearOfPassing,
+                pgCgpa:req.body.pgCgpa
+            }
+        })
+        await userEducation.save();
+        res.status(200).json({message:"Education added"})
     } 
 
     catch (error) {
@@ -49,7 +46,8 @@ export const createEducation=async(req,res)=>{
 }
 export const updateEducation=async(req,res)=>{
     try {
-        const id = req.query.id;
+        const id = req.query.userId;
+        console.log(id);
         let exEducation= await Education.findOne({userId:id})
         console.log(exEducation);
         console.log(req.body);
@@ -83,7 +81,7 @@ export const updateEducation=async(req,res)=>{
           }
         if(!exEducation) return res.status(200).json({message:"No User"})
         await Education.findOneAndUpdate({userId:id},{$set:obj},{new:false})
-        console.log(req.query.id);
+        console.log(req.params.id);
         res.status(200).json({message:"Education details Updated"})
     } catch (error) {
         res.status(400).json({message:error.message})
