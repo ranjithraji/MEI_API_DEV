@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import Address from "../models/adddressModule.js";
+import Address from "../models/adddressModel.js";
 
 const saltRounds=10;
 dotenv.config();
