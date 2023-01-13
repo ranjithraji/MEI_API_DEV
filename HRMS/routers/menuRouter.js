@@ -4,10 +4,10 @@ import auth from "../middleware/auth.js";
 import authOwner from "../middleware/owner.js";
 const router = express.Router();
 
-router.post("/create_menu",[auth,authOwner],createMenu)
-router.get("/view_menu",[auth,authOwner],getmenu)
-router.put("/update_menu/:id",[auth,authOwner],updatemenu)
-router.delete("/delete_menu",[auth,authOwner],deletemenu)
+router.post("/create_menu",createMenu)
+router.get("/view_menu",getmenu)
+router.put("/update_menu/:id",updatemenu)
+router.delete("/delete_menu",deletemenu)
 
 
 export default router

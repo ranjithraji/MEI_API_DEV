@@ -7,9 +7,16 @@ async function auth(req,res,next){
     if(!token)res.status(403).send('forbidden')
     try {
         const decoded=jwt.verify(token,process.env.JWT)
+        console.log(decoded);
         req.user=decoded
+        let getOwner=await User.findById({_id:req.user.id}).select("isOwner")
+        console.log(getOwner.isOwner,"mmass");
+        if(getOwner?.isOwner){ 
+            req.user={...req.user,isOwner:getOwner?.isOwner}
+            return next()
+        }
         let user=await User.findById({_id:req.user.id}).populate("role")
-        // console.log(user);
+        req.user={...req.user,...{roleId:user.role._id,roleName:user.role.roleType,isOwner:user.isOwner}}
         next();
     } catch (error) {
         res.status(400).send("invalid token")

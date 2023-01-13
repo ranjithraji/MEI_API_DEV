@@ -23,7 +23,8 @@ export const reg=async (req,res)=>{
                 dob:req.body.dob,
                 gender:req.body.gender,
                 bloodGroup:req.body.bloodGroup,
-                mobileNo:req.body.mobileNo
+                mobileNo:req.body.mobileNo,
+                role:req.body.role,
             })
             try {
                 await register.save()
@@ -80,7 +81,7 @@ export const login=async(req,res)=>{
     if(foundUser){
         bcrypt.compare(req.body.password,foundUser.password,(err,result)=>{
             if(result){
-                const token=jwt.sign({id:foundUser?._id,isOwner:foundUser?.isOwner},process.env.JWT)
+                const token=jwt.sign({id:foundUser?._id},process.env.JWT)
                 res.header("hrms-auth-token",token).json({message:"login successfully",token:token})
             }else{
                 res.status(400).json({message:"please enter correct password"})
