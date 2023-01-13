@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const Document = mongoose.model('Document', new mongoose.Schema({
+const document =  new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -52,6 +52,7 @@ const Document = mongoose.model('Document', new mongoose.Schema({
     },
 }, {
     timestamps: true
-}))
+})
 
+const Document=mongoose.model('Document',document)
 export default Document

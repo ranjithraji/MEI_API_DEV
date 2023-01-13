@@ -1,4 +1,4 @@
-import mongoose, { Mongoose, SchemaType } from "mongoose";
+import mongoose from "mongoose";
 
 const user =  new mongoose.Schema({
     firstName:{
@@ -62,15 +62,8 @@ const user =  new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'Education',
     },
-    experienceDetails:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Experience',
-    },
-    currentCompanyDetails:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'CurrentCompany',
-    }
-
+  
+    
 },  {
     timestamps: true
 }

@@ -19,7 +19,7 @@ export const create = async (req, res) => {
 
 export const update = async (req, res) => {
     try {
-        await Rolemenu.findByIdAndupdate({_id:req.params.id},{$set:req.body},{new:true});
+        await Rolemenu.findByIdAndUpdate({_id:req.params.id},{$set:req.body},{new:true});
         res.status(201).json({message:"update success"});
     } catch (error) {
         res.status(400).json({message:error.message});
@@ -28,7 +28,7 @@ export const update = async (req, res) => {
 
 export const deleteRoleMenu = async (req, res) => {
     try {
-        await Rolemenu.findByIdAnddelete({_id:req.params.id});
+        await Rolemenu.findByIdAndDelete({_id:req.params.id});
         res.status(201).json({message:"delete success"});
     } catch (error) {
         res.status(400).json({message:error.message});
@@ -37,7 +37,7 @@ export const deleteRoleMenu = async (req, res) => {
 
 export const getById = async (req, res) => {
     try {
-        let user=await Rolemenu.findById({_id:req.params.id});
+        let user=await Rolemenu.findOne({role:req.user.roleId});
         res.status(201).json({data:user});
     } catch (error) {
         res.status(400).json({message:error.message});
@@ -46,9 +46,10 @@ export const getById = async (req, res) => {
 
 export const getAll = async (req, res) => {
     try {
-        let user=await Rolemenu.find();
+        let user=await Rolemenu.find().populate("role");
         res.status(201).json({data:user});
     } catch (error) {
         res.status(400).json({message:error.message});
     }
 };
+
