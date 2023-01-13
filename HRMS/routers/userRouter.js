@@ -1,9 +1,5 @@
 import express from "express";
-<<<<<<< HEAD
-import { login, reg ,getAll, ownerReg,deleteUser, updateUser, currentCompany, currentCompanyView, currentCompanyUpdate, addDocument, viewDocument, updateDocument, addPreviousCompany, viewPreviousCompany, previousCompanyUpdate} from "../controller/userController.js";
-=======
-import { login, reg ,getAll, ownerReg,deleteUser,profile} from "../controller/userController.js";
->>>>>>> a791dc0bf2880fda7316d0f4a8f28e2135b43ffa
+import { login, reg ,getAll, ownerReg,deleteUser,profileupdateUser, currentCompany, currentCompanyView, currentCompanyUpdate, addDocument, viewDocument, updateDocument, addPreviousCompany, viewPreviousCompany, previousCompanyUpdate} from "../controller/userController.js";
 import auth from "../middleware/auth.js";
 import authOwner from "../middleware/owner.js";
 

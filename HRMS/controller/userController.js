@@ -334,9 +334,6 @@ export const deleteUser = async (req, res) => {
     }
 };
 
-<<<<<<< HEAD
-export const getAll = async (req, res) => {
-=======
 export const profile=async(req, res) => {
     try {
         const view= await User.find({_id:req.user.id})
@@ -347,8 +344,7 @@ export const profile=async(req, res) => {
     
 }
 
-export const getAll=async(req,res)=>{
->>>>>>> a791dc0bf2880fda7316d0f4a8f28e2135b43ffa
+export const getAll = async (req, res) => {
     try {
         const getUser = await User.find()
         res.status(200).json({ data: getUser })
