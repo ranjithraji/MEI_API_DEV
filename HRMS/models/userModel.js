@@ -48,10 +48,10 @@ const user =  new mongoose.Schema({
     },
     educationDetails:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Education',
+        ref:'Role',
     },
   
-
+    
 },  {
     timestamps: true
 }
