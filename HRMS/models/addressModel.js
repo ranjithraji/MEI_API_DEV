@@ -28,5 +28,6 @@ const address=new mongoose.Schema({
     timestamps: true,
 });
 
+
 const Address=mongoose.model('Address',address)
 export default Address;

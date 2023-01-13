@@ -6,64 +6,64 @@ const education=new mongoose.Schema({
         ref: 'User',
     },
     sslc: {
-        schoolName: {
+        sslcSchoolName: {
             type: String,
         },
-        board: {
+        sslcBoard: {
             type: String,
         },
-        yearOfPassing: {
+        sslcYearOfPassing: {
             type: Number,
         },
-        percentage: {
+        sslcPercentage: {
             type: Number,
         },
     },
     hsc: {
-        schoolName: {
+        hscSchoolName: {
             type: String,
         },
-        board: {
+        hscBoard: {
             type: String,
         },
-        yearOfPassing: {
+        hscYearOfPassing: {
             type: Number,
         },
-        percentage: {
+        hscPercentage: {
             type: Number,
         },
     },
     ug: {
-        universityName: {
+        ugUniversityName: {
             type: String,
         },
-        instituteName: {
+        ugInstituteName: {
             type: String,
         },
-        departmentCourse: {
+        ugDepartmentCourse: {
             type: String,
         },
-        yearOfPassing: {
+        ugYearOfPassing: {
             type: Number,
         },
-        cgpa: {
+        ugCgpa: {
             type: Number,
         }
     },
     pg: {
-        universityName: {
+        pgUniversityName: {
             type: String,
         },
-        instituteName: {
+        pgInstituteName: {
             type: String,
         },
-        departmentCourse: {
+        pgDepartmentCourse: {
             type: String,
         },
-        yearOfPassing: {
+        pgYearOfPassing: {
             type: Number,
         },
-        cgpa: {
+        pgCgpa: {
             type: Number,
         }
     },
