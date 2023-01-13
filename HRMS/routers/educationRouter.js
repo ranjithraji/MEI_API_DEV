@@ -4,9 +4,9 @@ import auth from "../middleware/auth.js";
 import authz from "../middleware/authz.js";
 const router = express.Router();
 
-router.post("/edu/create/:id",[auth, authz],createEducation)
-router.put("/edu/update/:id",[auth, authz],updateEducation)
+router.post("/edu/create",[auth, authz],createEducation)
+router.put("/edu/update",[auth, authz],updateEducation)
 router.get("/edu/getAll",[auth, authz],getAll)
-router.get("/edu/getbyid/:id",[auth, authz],getById)
+router.get("/edu/getbyid",auth,getById)
 
 export default router;

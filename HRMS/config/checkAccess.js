@@ -25,7 +25,7 @@ export const checkAccessCreate=(user,menu)=>{
         if(item?.menu?._id==menu){
             item?.create==true?access=true:access=false;
         }else{
-            // if not not menu update this next task
+            // if  not menu update this next task
         }
     })
     return access
