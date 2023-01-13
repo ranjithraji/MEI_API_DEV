@@ -48,7 +48,7 @@ const user =  new mongoose.Schema({
     },
     educationDetails:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Role',
+        ref:'Education',
     },
   
     
