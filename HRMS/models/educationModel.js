@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const Education=mongoose.model('Education',new mongoose.Schema({
+const education=new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -67,10 +67,29 @@ const Education=mongoose.model('Education',new mongoose.Schema({
             type: Number,
         }
     },
+    phd: {
+        phdUniversityName: {
+            type: String,
+        },
+        phdInstituteName: {
+            type: String,
+        },
+        phdDepartmentCourse: {
+            type: String,
+        },
+        phdYearOfPassing: {
+            type: Number,
+        },
+        phdCgpa: {
+            type: Number,
+        }
+    }
 },
 {
     timestamps: true,
 }
-));
+);
 
+const Education=mongoose.model('Education',education)
 export default Education;
+

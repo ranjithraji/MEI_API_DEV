@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const CurrentCompany = mongoose.model('CurrentCompany', new mongoose.Schema({
+const currentCompany =  new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -24,9 +24,15 @@ const CurrentCompany = mongoose.model('CurrentCompany', new mongoose.Schema({
     reportedTo: {
         type: String,
     },
+    isFresher:{
+        type: Boolean,
+        default: false
+    }
 
 }, {
     timestamps: true,
-}));
+});
 
+
+const CurrentCompany=mongoose.model('CurrentCompany',currentCompany)
 export default CurrentCompany;
