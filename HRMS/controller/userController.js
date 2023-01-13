@@ -2,15 +2,21 @@ import User from "../models/userModel.js"
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import { checkAccessCreate } from "../config/checkAccess.js";
 
 const saltRounds=10;
 dotenv.config();
 
 export const reg=async (req,res)=>{
     let email=req.body.email
+    let menu=req.body.requestMenu
+    let access=checkAccessCreate(req.user,menu)
+    console.log(access);
+    if(access==false && !req.user.isOwner) return res.status(401).json({message:"your not right person to do this"});
+    if(access==undefined ) return res.status(400).json({message:"something wrong"});
     let exUser=await User.findOne({email:email})
     if(exUser){
-        return res.status(400).json({message:"email exists please login"})
+        return res.status(400).json({message:"email already register"})
     }
     else{
         bcrypt.hash(req.body.password,saltRounds,async(err,hash)=>{
