@@ -35,7 +35,7 @@ export const reg=async (req,res)=>{
             })
             try {
                 await register.save()
-                res.status(201).json({message:"Register success"})
+                res.status(201).json({message:"register"})
             } catch (error) {
                 res.status(400).json({message:error.message});
             }
@@ -53,7 +53,9 @@ export const updateUser= async (req, res) => {
     }
 }
 
+
 export const ownerReg=async (req,res)=>{
+
     let email=req.body.email
     let exUser=await User.findOne({email:email})
     if(exUser){
@@ -85,29 +87,31 @@ export const ownerReg=async (req,res)=>{
 export const login=async(req,res)=>{
     let email=req.body.email
     let foundUser=await User.findOne({email:email})
+    console.log(foundUser?.password);
     if(foundUser){
         bcrypt.compare(req.body.password,foundUser.password,(err,result)=>{
+            // console.log(err);
             if(result){
                 const token=jwt.sign({id:foundUser?._id},process.env.JWT)
                 res.header("hrms-auth-token",token).json({message:"login successfully",token:token})
             }else{
-                res.status(400).json({message:"please enter correct password"})
+                res.status(400).json({message:"please enter correct password!!!"})
             }
         })
+        
     }else{
-        res.status(400).json({message:error.message})
+        res.status(400).json({message:"Email not found"})
     }
 }
 
-export const deleteUser = async (req, res) => {
+ export const deleteUser = async (req, res) => {
+  
     let email=req.body.email
-    try {
-        const user = await User.findOneAndRemove({ email:email });
-        if (!user) return res.status(404).json({message:'User not found'});
-        res.status(200).json({data:user});
-    } catch (error) {
-        res.status(400).json({message:error.message});
-    }
+  const user = await User.findOneAndRemove({ email:email });
+
+  if (!user) return res.status(404).json({message:'The user with the given ID was not found.'});
+
+  res.json(user);
 };
 
 export const profile=async(req, res) => {

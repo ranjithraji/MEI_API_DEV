@@ -67,6 +67,23 @@ const education=new mongoose.Schema({
             type: Number,
         }
     },
+    phd: {
+        phdUniversityName: {
+            type: String,
+        },
+        phdInstituteName: {
+            type: String,
+        },
+        phdDepartmentCourse: {
+            type: String,
+        },
+        phdYearOfPassing: {
+            type: Number,
+        },
+        phdCgpa: {
+            type: Number,
+        }
+    }
 },
 {
     timestamps: true,

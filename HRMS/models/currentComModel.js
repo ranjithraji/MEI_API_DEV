@@ -24,6 +24,10 @@ const currentCompany =  new mongoose.Schema({
     reportedTo: {
         type: String,
     },
+    isFresher:{
+        type: Boolean,
+        default: false
+    }
 
 }, {
     timestamps: true,

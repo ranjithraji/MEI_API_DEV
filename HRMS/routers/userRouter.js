@@ -9,6 +9,7 @@ const router = express.Router();
 router.post("/login",login)
 router.get("/profile",auth,profile)
 router.post("/v1/ownerReg",ownerReg)
+// router.delete("/v2/currentCompany",[auth,authOwner],currentCompany)
 
 router.post("/v2/userfamily", [auth, authz],UserFam)
 router.post("/v2/updatefamily", [auth, authz],updateFam)
