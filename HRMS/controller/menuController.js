@@ -39,7 +39,7 @@ export const updatemenu=async(req,res)=>{
     try {
         const menuName = req.body.menuName
         const menuCode= req.body.menuCode 
-        let xmenu = await Menu.findByIdAndUpdate({_id:req.query.id},{$set:req.body},{new:true})
+        let xmenu = await Menu.findByIdAndUpdate({_id:req.params.id},{$set:req.body},{new:true})
 
         if(!xmenu) return res.status(200).json({message:`sorry, there is no field in ${menuName}`})
         res.status(200).json({message:"Menu Updated"})
