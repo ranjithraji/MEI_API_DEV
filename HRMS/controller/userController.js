@@ -2,7 +2,7 @@ import User from "../models/userModel.js"
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import Address from "../models/adddressModule.js";
+import Address from "../models/addressModel.js";
 
 const saltRounds=10;
 dotenv.config();
