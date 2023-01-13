@@ -6,8 +6,8 @@ import { createEducation,getAll,getById,updateEducation} from "../controller/edu
 
 const router = express.Router();
 
-router.post("/edu/create/:id",createEducation)
-router.put("/edu/update/:id",updateEducation)
+router.post("/edu/create",createEducation)
+router.put("/edu/update",updateEducation)
 router.get("/edu/getAll",getAll)
 router.get("/edu/getbyid/:id",getById)
 
