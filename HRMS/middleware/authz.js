@@ -8,7 +8,6 @@ const authZ=async(req,res,next)=>{
     // console.log(user);
     let access=user
     req.user={...req.user ,access}
-    // console.log(access);
     next() 
 }
 
