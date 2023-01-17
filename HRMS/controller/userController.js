@@ -478,7 +478,10 @@ export const createAddress = async (req, res) => {
         const id = req.query.id;
         let Xuser = await User.findById({ _id: id });
         if (!Xuser) return res.status(200).json({ message: "No user" })
-        let newAddress = await new Address({
+        // let user_Id= id;
+        let User_add = await Address.findOne({userId:id});
+        if(User_add) return res.status(200).json({ message: "Address Already Added" })
+            let newAddress = await new Address({
             userId: id,
             address1: req.body.address1,
             address2: req.body.address2,
