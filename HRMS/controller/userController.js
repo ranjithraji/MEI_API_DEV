@@ -195,21 +195,21 @@ export const currentCompanyUpdate = async (req, res) => {
         res.status(200).json({ message: "Company Details Updated successfully" })
     } catch (error) {
         res.status(400).json({ message: error.message });
-=========
+
   try {
     const company = await CurrentCompany.findByIdAndUpdate(req.params.id, {
       $set: req.body,
     });
     if (!company) {
       return res.status(400).json({ message: "No company details found" });
->>>>>>>>> Temporary merge branch 2
+
     }
 }
 
 // Add Document Details
 
 export const addDocument = async (req, res) => {
-<<<<<<<<< Temporary merge branch 1
+
     try {
         const user = await Document.findOne({
             userId: req.query.userId
@@ -245,7 +245,7 @@ export const addDocument = async (req, res) => {
         res.status(201).json({ message: "Document details added" })
     } catch (error) {
         res.status(400).json({ message: error.message });
-=========
+
   try {
     const user = await Document.findOne({
       userId: req.query.userId,
@@ -254,14 +254,14 @@ export const addDocument = async (req, res) => {
       return res
         .status(400)
         .json({ message: "Document details already exists" });
->>>>>>>>> Temporary merge branch 2
+
     }
 }
 
 // View Document Details
 
 export const viewDocument = async (req, res) => {
-<<<<<<<<< Temporary merge branch 1
+
     try {
         const document = await Document.find({ userId: req.query.userId })//.populate('userId')
         if (!document) {
@@ -271,21 +271,21 @@ export const viewDocument = async (req, res) => {
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
-=========
+
   try {
     const document = await Document.find({ userId: req.query.userId }); //.populate('userId')
     if (!document) {
       return res.status(400).json({ message: "No document details found" });
     } else {
       return res.status(200).json(document);
->>>>>>>>> Temporary merge branch 2
+
     }
 }
 
 // Update Document Details
 
 export const updateDocument = async (req, res) => {
-<<<<<<<<< Temporary merge branch 1
+
     try {
         const document = await Document.findByIdAndUpdate(req.query .id, {
             $set: {
@@ -317,7 +317,7 @@ export const updateDocument = async (req, res) => {
         res.status(200).json({ message: "Document Details Updated successfully" })
     } catch (error) {
         res.status(400).json({ message: error.message });
-=========
+
   try {
     const document = await Document.findByIdAndUpdate(req.params.id, {
       $set: {
@@ -344,7 +344,7 @@ export const updateDocument = async (req, res) => {
     });
     if (!document) {
       return res.status(400).json({ message: "No document details found" });
->>>>>>>>> Temporary merge branch 2
+
     }
 }
 
@@ -494,7 +494,7 @@ export const deleteFam = async (req, res) => {
 
 //Address CRU
 export const createAddress = async (req, res) => {
-<<<<<<<<< Temporary merge branch 1
+
     try {
         const id = req.query.id;
         let Xuser = await User.findById({ _id: id });
@@ -514,7 +514,7 @@ export const createAddress = async (req, res) => {
         res.status(400).json({ message: error.message })
     }
 }
-=========
+
   try {
     const id = req.body.id;
     let Xuser = await User.findById({ _id: id });
@@ -535,7 +535,7 @@ export const createAddress = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
->>>>>>>>> Temporary merge branch 2
+
 
 export const updateAddress = async (req, res) => {
     try {
