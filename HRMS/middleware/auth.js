@@ -15,8 +15,8 @@ async function auth(req,res,next){
             req.user={...req.user,isOwner:getOwner?.isOwner}    
             return next()
         }
-        let user=await User.findById({_id:req.user.id})
-        console.log(user);
+        let user=await User.findById({_id:req.user.id}).populate("role")
+        // console.log(user+",ass");
         req.user={...req.user,...{roleId:user.role._id,roleName:user.role.roleType,isOwner:user.isOwner}}
         next(); 
     } catch (error) { 

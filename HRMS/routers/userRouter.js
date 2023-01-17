@@ -14,7 +14,7 @@ router.post("/v1/ownerReg",ownerReg)
 
 // Family Details------------
 router.post("/v2/userfamily", [auth, authz], UserFam)
-router.post("/v2/updatefamily", [auth, authz], updateFam)
+router.put("/v2/updatefamily", [auth, authz], updateFam)
 router.get("/v2/getbyid", [auth, authz], getFam)
 router.delete("/v2/deletefam", [auth, authz], deleteFam)
 
@@ -29,7 +29,7 @@ router.post("/v2/Useraddress", [auth, authz], createAddress)
 router.put("/v2/Updateaddress", [auth, authz], updateAddress)
 router.get("/v2/getaddress", [auth, authz], viewUserAddress)
 
-// Current Company Details------------
+// Current Company Details-----------
 router.post("/v2/addCurrentCompany", [auth, authz], currentCompany)
 router.get("/v2/viewCurrentCompany", [auth, authz], currentCompanyView)
 router.put("/v2/updateCurrentCompany/:id", [auth, authz], currentCompanyUpdate)
