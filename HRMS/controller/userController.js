@@ -140,19 +140,20 @@ export const getAll = async (req, res) => {
 // Adding User's Current Company Details
 
 export const currentCompany = async (req, res) => {
+  const userId = req.query.userId;
   try {
     const existUser = await CurrentCompany.findOne({
-      userId: req.query.userId,
+      userId: userId,
     });
     if (existUser) {
-      return res
-        .status(400)
-        .json({ message: "This user details already exists" });
-    }
+      return res.status(400).json({ message: "This user details already exists" });
+    }else if(!userId){
+      return res.status(400).json({ message: "Please provide user id" });
+    }else{
 
     const company = new CurrentCompany({
-      userId: req.query.userId,
-      detaprment: req.body.detaprment,
+      userId: userId,
+      department: req.body.detaprment,
       designation: req.body.designation,
       role: req.body.role,
       salary: req.body.salary,
@@ -162,6 +163,7 @@ export const currentCompany = async (req, res) => {
     });
     await company.save();
     res.status(201).json({ message: "Company details added" });
+  }
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
