@@ -91,7 +91,8 @@ export const getAll = async (req, res) => {
 };
 export const getById = async (req, res) => {
     try {
-        let singleuser=await Education.findById({_id:req.params.id});
+        let id=req.query.userId
+        let singleuser=await Education.findOne({userId:id});
         res.status(201).json({data:singleuser});
     } catch (error) {
         res.status(400).json({message:error.message});
