@@ -143,16 +143,17 @@ export const getAll = async (req, res) => {
 
 export const currentCompany = async (req, res) => {
     let menu = req.body.menuId
+    let id=req.query.userId
     let obj = checkAccessCreate(req.user, menu)
     if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });
     try {
-        const existUser = await CurrentCompany.findById({ userId: req.params.userId })
+        const existUser = await CurrentCompany.findOne({ userId: id })
         if (existUser) {
             return res.status(400).json({ message: "This user details already exists" })
         }
 
         const company = new CurrentCompany({
-            userId: req.body.userId,
+            userId: id,
             detaprment: req.body.detaprment,
             designation: req.body.designation,
             role: req.body.role,
@@ -478,7 +479,10 @@ export const createAddress = async (req, res) => {
         const id = req.query.id;
         let Xuser = await User.findById({ _id: id });
         if (!Xuser) return res.status(200).json({ message: "No user" })
-        let newAddress = await new Address({
+        // let user_Id= id;
+        let User_add = await Address.findOne({userId:id});
+        if(User_add) return res.status(200).json({ message: "Address Already Added" })
+            let newAddress = await new Address({
             userId: id,
             address1: req.body.address1,
             address2: req.body.address2,
