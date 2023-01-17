@@ -16,7 +16,8 @@ export const reg = async (req, res) => {
     let email = req.body.email
     let menu = req.body.menuId
     let obj = checkAccessCreate(req.user, menu)
-    if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     let exUser = await User.findOne({ email: email })
     if (exUser) {
         return res.status(400).json({ message: "email already register" })

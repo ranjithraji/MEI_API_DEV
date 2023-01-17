@@ -10,7 +10,6 @@ export const createEducation=async(req,res)=>{
         if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });     
        console.log(id);
         let exUser= await Education.findOne({userId:id});
-         //console.log(exUser);
         if(exUser) return res.status(200).json({message:"Education details already added for this user"})
         let userEducation =  new Education({
             userId:id,
@@ -18,7 +17,7 @@ export const createEducation=async(req,res)=>{
                 sslcSchoolName:req.body.sslcSchoolName || null,
                 sslcBoard:req.body.sslcBoard || null,
                 sslcYearOfPassing:req.body.sslcYearOfPassing || null,
-                sslcPercentage:req.body.sslcPercentage || null
+                sslcPercentage:req.body.sslcPercentage || null 
             },
             hsc:{
                 hscSchoolName:req.body.hscSchoolName || null,
