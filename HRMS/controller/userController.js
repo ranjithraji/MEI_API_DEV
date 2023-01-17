@@ -171,9 +171,10 @@ export const currentCompany = async (req, res) => {
 
 export const currentCompanyView = async (req, res) => {
   try {
-    const company = await CurrentCompany.find({ userId: req.query.userId }); //.populate('role').populate('userId')
+    const company = await CurrentCompany.findOne({ userId: req.query.userId }); //.populate('role').populate('userId')
+    if(!req.query.userId) return res.status(400).json({ message: "Please give userId" });
     if (!company) {
-      return res.status(400).json({ message: "No company details found" });
+      return res.status(400).json({ message: "No company details found in this userId" });
     }
     res.status(200).json(company);
   } catch (error) {
@@ -211,7 +212,7 @@ export const addDocument = async (req, res) => {
     }
 
     const document = new Document({
-      userId: req.body.userId,
+      userId: req.query.userId,
       bankDetails: {
         accountNo: req.body.accountNo,
         ifsc: req.body.ifsc,
@@ -243,7 +244,8 @@ export const addDocument = async (req, res) => {
 
 export const viewDocument = async (req, res) => {
   try {
-    const document = await Document.find({ userId: req.query.userId }); //.populate('userId')
+    const document = await Document.findOne({ userId: req.query.userId }); //.populate('userId')
+    if(!req.query.userId) return res.status(400).json({ message: "Please give userId" });  
     if (!document) {
       return res.status(400).json({ message: "No document details found" });
     } else {
@@ -293,6 +295,7 @@ export const updateDocument = async (req, res) => {
 // Add user's previous company details
 
 export const addPreviousCompany = async (req, res) => {
+  const userId=req.query.userId;
   try {
     const company = {
       companyName: req.body.companyName,
@@ -303,12 +306,13 @@ export const addPreviousCompany = async (req, res) => {
       endDate: req.body.endDate,
       experience: req.body.experience,
     };
+    if(!userId) return res.status(400).json({ message: "Please give userId" });
     const newExperience = new Experience({
-      userId: req.body.userId,
+      userId: userId,
       previewsCompanies: [],
     });
     const user = await Experience.findOne({
-      userId: req.query.userId,
+      userId: userId,
     });
     if (user) {
       user.previewsCompanies.push(company);
@@ -328,7 +332,8 @@ export const addPreviousCompany = async (req, res) => {
 
 export const viewPreviousCompany = async (req, res) => {
   try {
-    const company = await Experience.find({ userId: req.query.userId }); //.populate('userId')
+    const company = await Experience.findOne({ userId: req.query.userId }); //.populate('userId')
+    if(!req.query.userId) return res.status(400).json({ message: "Please give userId" });
     if (!company) {
       return res.status(400).json({ message: "No company details found" });
     } else {
@@ -344,6 +349,7 @@ export const viewPreviousCompany = async (req, res) => {
 export const previousCompanyUpdate = async (req, res) => {
   try {
     const user = await Experience.findOne({ userId: req.query.userId });
+    if(!req.query.userId) return res.status(400).json({ message: "Please give userId" });
     if (!user) {
       return res
         .status(400)

@@ -46,22 +46,6 @@ const user =  new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'Role',
     },
-    addressDetails:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Address',
-    },
-    familyDetails:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Family',
-    },
-    documentDetails:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Document',
-    },
-    educationDetails:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Education',
-    },
   
     
 },  {
