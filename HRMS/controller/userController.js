@@ -429,7 +429,7 @@ export const UserFam = async (req, res) => {
 
 export const updateFam = async (req, res) => {
     let menu = req.body.menuId
-    let obj = checkAccessUpdate(req.user, menu)
+    let obj = checkAccessUpdate(req.user, menu) 
     if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });
     try {
         await Family.findByIdAndUpdate({ _id: req.body.id }, { $set: req.body });
