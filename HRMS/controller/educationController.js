@@ -17,7 +17,7 @@ export const createEducation=async(req,res)=>{
                 sslcSchoolName:req.body.sslcSchoolName || null,
                 sslcBoard:req.body.sslcBoard || null,
                 sslcYearOfPassing:req.body.sslcYearOfPassing || null,
-                sslcPercentage:req.body.sslcPercentage || null
+                sslcPercentage:req.body.sslcPercentage || null 
             },
             hsc:{
                 hscSchoolName:req.body.hscSchoolName || null,
