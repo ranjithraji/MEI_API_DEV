@@ -427,12 +427,15 @@ export const getFam = async (req, res) => {
         let id = req.query.id;
         let Xuser = await User.findById({ _id: id });
         if (!Xuser) return res.status(200).json({ message: "No user found" })
-        const getFam = await Family.find()
+        const getFam = await Family.find({ userId: id })
         res.status(200).json({ data: getFam })
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 }
+
+
+
 
 
 export const deleteFam = async (req, res) => {
