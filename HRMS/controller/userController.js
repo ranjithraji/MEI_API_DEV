@@ -16,7 +16,7 @@ export const reg = async (req, res) => {
     let email = req.body.email
     let menu = req.body.requestMenu
     let access = checkAccessCreate(req.user, menu)
-    if (access == false && !req.user.isOwner) return res.status(401).json({ message: "your not right person to do this" });
+    if (access == false && !req.user.isOwner) return res.status(401).json({message: "your not right person to do this" });
     if (access == undefined && !req.user.isOwner) return res.status(400).json({ message: "something wrong" });
     let exUser = await User.findOne({ email: email })
     if (exUser) {
