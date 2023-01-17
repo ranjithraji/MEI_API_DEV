@@ -5,7 +5,7 @@ const currentCompany =  new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
-    detaprment: {
+    department: {
         type: String,
     },
     designation: {

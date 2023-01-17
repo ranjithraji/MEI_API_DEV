@@ -143,16 +143,17 @@ export const getAll = async (req, res) => {
 
 export const currentCompany = async (req, res) => {
     let menu = req.body.menuId
+    let id=req.query.userId
     let obj = checkAccessCreate(req.user, menu)
     if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });
     try {
-        const existUser = await CurrentCompany.findById({ userId: req.params.userId })
+        const existUser = await CurrentCompany.findOne({ userId: id })
         if (existUser) {
             return res.status(400).json({ message: "This user details already exists" })
         }
 
         const company = new CurrentCompany({
-            userId: req.body.userId,
+            userId: id,
             detaprment: req.body.detaprment,
             designation: req.body.designation,
             role: req.body.role,
