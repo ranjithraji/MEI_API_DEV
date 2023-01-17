@@ -7,6 +7,7 @@ const currentCompany =  new mongoose.Schema({
     },
     department: {
         type: String,
+        required: true
     },
     designation: {
         type: String,
@@ -17,15 +18,19 @@ const currentCompany =  new mongoose.Schema({
     },
     salary: {
         type: Number,
+        required: true
     },
     joiningDate: {
         type: String,
+        required: true
     },
     reportedTo: {
         type: String,
+        required: true
     },
     isFresher:{
         type: Boolean,
+        required: true,
         default: false
     }
 

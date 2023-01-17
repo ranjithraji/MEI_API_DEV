@@ -17,9 +17,11 @@ const request=new mongoose.Schema({
     },
     status:{
         type:String,
+        required: true
     },
     reason:{
         type:String,
+        required: true
     },
 });
 

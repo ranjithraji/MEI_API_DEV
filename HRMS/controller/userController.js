@@ -48,33 +48,33 @@ export const reg = async (req, res) => {
 
 
 export const ownerReg = async (req, res) => {
-    let email = req.body.email
-    let exUser = await User.findOne({ email: email })
-    if (exUser) {
-        return res.json({ message: "email exists please login" })
-    }
-    else {
-        bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
-            let register = new User({
-                email: req.body.email,
-                password: hash,
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                dob: req.body.dob,
-                gender: req.body.gender,
-                bloodGroup: req.body.bloodGroup,
-                mobileNo: req.body.mobileNo,
-                isOwner: true
-            })
-            try {
-                await register.save()
-                res.status(201).json({ message: "Owner Register success" })
-            } catch (error) {
-                res.status(400).json({ message: error.message });
-            }
-        })
-    }
-}
+  let email = req.body.email;
+  let exUser = await User.findOne({ email: email });
+  if (exUser) {
+    return res.json({ message: "email exists please login" });
+  } else {
+    bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
+      let register = new User({
+        email: req.body.email,
+        password: hash,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        dob: req.body.dob,
+        gender: req.body.gender,
+        marriageStatus: req.body.marriageStatus,
+        bloodGroup: req.body.bloodGroup,
+        mobileNo: req.body.mobileNo,
+        isOwner: true,
+      });
+      try {
+        await register.save();
+        res.status(201).json({ message: "Owner Register success" });
+      } catch (error) {
+        res.status(400).json({ message: error.message });
+      }
+    });
+  }
+};
 
 export const login = async (req, res) => {
     let email = req.body.email
@@ -173,8 +173,10 @@ export const currentCompany = async (req, res) => {
 // View user's current company details
 
 export const currentCompanyView = async (req, res) => {
+  const userId = req.query.userId;
   try {
-    const company = await CurrentCompany.find({ userId: req.query.userId }); //.populate('role').populate('userId')
+    const company = await CurrentCompany.findOne({ userId:userId }); //.populate('role').populate('userId')
+    if(!userId) return res.status(400).json({ message: "Please give userId" });
     if (!company) {
       return res.status(400).json({ message: "No company details found" });
     }
@@ -247,8 +249,10 @@ export const addDocument = async (req, res) => {
 // View Document Details
 
 export const viewDocument = async (req, res) => {
+  const userId = req.query.userId;
   try {
-    const document = await Document.find({ userId: req.query.userId }); //.populate('userId')
+    const document = await Document.findOne({ userId: userId }); //.populate('userId')
+    if(!userId) return res.status(400).json({ message: "Please give userId" });  
     if (!document) {
       return res.status(400).json({ message: "No document details found" });
     } else {
@@ -316,9 +320,7 @@ export const addPreviousCompany = async (req, res) => {
       userId: req.body.userId,
       previewsCompanies: [],
     });
-    const user = await Experience.findOne({
-      userId: req.query.userId,
-    });
+    const user = await Experience.findOne({userId: userId});
     if (user) {
       user.previewsCompanies.push(company);
       await user.save();
@@ -336,8 +338,10 @@ export const addPreviousCompany = async (req, res) => {
 // View user's previous company details
 
 export const viewPreviousCompany = async (req, res) => {
+  const userId = req.query.userId;
   try {
-    const company = await Experience.find({ userId: req.query.userId }); //.populate('userId')
+    const company = await Experience.findOne({ userId:userId }); //.populate('userId')
+    if(!userId) return res.status(400).json({ message: "Please give userId" });
     if (!company) {
       return res.status(400).json({ message: "No company details found" });
     } else {
@@ -351,12 +355,12 @@ export const viewPreviousCompany = async (req, res) => {
 // Update user's previous company details
 
 export const previousCompanyUpdate = async (req, res) => {
+  const userId = req.query.userId;
   try {
-    const user = await Experience.findOne({ userId: req.query.userId });
+    const user = await Experience.findOne({ userId:userId });
+    if(!userId) return res.status(400).json({ message: "Please give userId" });
     if (!user) {
-      return res
-        .status(400)
-        .json({ message: "No company details found in this user" });
+      return res.status(400).json({ message: "No company details found in this user" });
     } else {
       const company = user.previewsCompanies.id(req.body.id);
       if (!company) {
