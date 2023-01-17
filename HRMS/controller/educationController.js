@@ -1,37 +1,43 @@
 import Education from "../models/educationModel.js"
+import {checkAccessCreate, checkAccessGet, checkAccessUpdate} from "../config/checkAccess.js"
 
 export const createEducation=async(req,res)=>{
     try {
-       let id=req.query.userId      
+       let id=req.query.userId 
+       
+        let menu = req.body.menuId
+        let obj = checkAccessCreate(req.user, menu)
+        if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });     
+       console.log(id);
         let exUser= await Education.findOne({userId:id});
         if(exUser) return res.status(200).json({message:"Education details already added for this user"})
         let userEducation =  new Education({
             userId:id,
             sslc:{
-                sslcSchoolName:req.body.sslcSchoolName,
-                sslcBoard:req.body.sslcBoard,
-                sslcYearOfPassing:req.body.sslcYearOfPassing,
-                sslcPercentage:req.body.sslcPercentage
+                sslcSchoolName:req.body.sslcSchoolName || null,
+                sslcBoard:req.body.sslcBoard || null,
+                sslcYearOfPassing:req.body.sslcYearOfPassing || null,
+                sslcPercentage:req.body.sslcPercentage || null
             },
             hsc:{
-                hscSchoolName:req.body.hscSchoolName,
-                hscBoard:req.body.hscBoard,
-                hscYearOfPassing:req.body.hscYearOfPassing,
-                hscPercentage:req.body.hscPercentage
+                hscSchoolName:req.body.hscSchoolName || null,
+                hscBoard:req.body.hscBoard || null,
+                hscYearOfPassing:req.body.hscYearOfPassing || null,
+                hscPercentage:req.body.hscPercentage || null
             },
             ug:{
-                ugUniversityName:req.body.ugUniversityName,
-                ugInstituteName:req.body.ugInstituteName,
-                ugDepartmentCourse:req.body.ugDepartmentCourse,
-                ugYearOfPassing:req.body.ugYearOfPassing,
-                ugCgpa:req.body.ugCgpa
+                ugUniversityName:req.body.ugUniversityName || null,
+                ugInstituteName:req.body.ugInstituteName || null,
+                ugDepartmentCourse:req.body.ugDepartmentCourse || null,
+                ugYearOfPassing:req.body.ugYearOfPassing || null,
+                ugCgpa:req.body.ugCgpa || null
             },
             pg:{
-                pgUniversityName:req.body.pgUniversityName,
-                pgInstituteName:req.body.pgInstituteName,
-                pgDepartmentCourse:req.body.pgDepartmentCourse,
-                pgYearOfPassing:req.body.pgYearOfPassing,
-                pgCgpa:req.body.pgCgpa
+                pgUniversityName:req.body.pgUniversityName || null,
+                pgInstituteName:req.body.pgInstituteNamev || null,
+                pgDepartmentCourse:req.body.pgDepartmentCourse || null,
+                pgYearOfPassing:req.body.pgYearOfPassing || null,
+                pgCgpa:req.body.pgCgpa || null
             }
         })
         await userEducation.save();
@@ -43,6 +49,9 @@ export const createEducation=async(req,res)=>{
     } 
 }
 export const updateEducation=async(req,res)=>{
+    let menu = req.body.menuId
+    let obj = checkAccessUpdate(req.user, menu)
+    if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });     
     try {
         const id = req.query.userId;
         let exEducation= await Education.findOne({userId:id})
@@ -90,6 +99,9 @@ export const getAll = async (req, res) => {
     }
 };
 export const getById = async (req, res) => {
+    let menu = req.body.menuId
+    let obj = checkAccessGet(req.user, menu)
+    if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });     
     try {
         let id=req.query.userId
         let singleuser=await Education.findOne({userId:id});
