@@ -13,41 +13,39 @@ const saltRounds = 10;
 dotenv.config();
 
 export const reg = async (req, res) => {
-  let email = req.body.email;
-  let menu = req.body.requestMenu;
-  let access = checkAccessCreate(req.user, menu);
-  console.log(access);
-  if (access == false && !req.user.isOwner)
-    return res
-      .status(401)
-      .json({ message: "your not right person to do this" });
-  if (access == undefined)
-    return res.status(400).json({ message: "something wrong" });
-  let exUser = await User.findOne({ email: email });
-  if (exUser) {
-    return res.status(400).json({ message: "email already register" });
-  } else {
-    bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
-      let register = new User({
-        email: req.body.email,
-        password: hash,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        dob: req.body.dob,
-        gender: req.body.gender,
-        bloodGroup: req.body.bloodGroup,
-        mobileNo: req.body.mobileNo,
-        role: req.body.role,
-      });
-      try {
-        await register.save();
-        res.status(201).json({ message: "Register success" });
-      } catch (error) {
-        res.status(400).json({ message: error.message });
-      }
-    });
-  }
-};
+    let email = req.body.email
+    let menu = req.body.requestMenu
+    let access = checkAccessCreate(req.user, menu)
+    if (access == false && !req.user.isOwner) return res.status(401).json({ message: "your not right person to do this" });
+    if (access == undefined && !req.user.isOwner) return res.status(400).json({ message: "something wrong" });
+    let exUser = await User.findOne({ email: email })
+    if (exUser) {
+        return res.status(400).json({ message: "email already register" })
+    }
+    else {
+        bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
+            let register = new User({
+                email: req.body.email,
+                password: hash,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                dob: req.body.dob,
+                gender: req.body.gender,
+                bloodGroup: req.body.bloodGroup,
+                mobileNo: req.body.mobileNo,
+                role: req.body.role,
+
+            })
+            try {
+                await register.save()
+                res.status(201).json({ message: "Register success" })
+            } catch (error) {
+                res.status(400).json({ message: error.message });
+            }
+        })
+    }
+}
+
 
 export const ownerReg = async (req, res) => {
     let email = req.body.email
@@ -165,7 +163,6 @@ export const currentCompany = async (req, res) => {
 // View user's current company details
 
 export const currentCompanyView = async (req, res) => {
-
     try {
         const company = await CurrentCompany.find({ userId: req.query.userId })//.populate('role').populate('userId')
         if (!company) {
@@ -174,19 +171,12 @@ export const currentCompanyView = async (req, res) => {
         res.status(200).json(company)
     } catch (error) {
         res.status(400).json({ message: error.message });
-
-  try {
-    const company = await CurrentCompany.find({ userId: req.query.userId }); //.populate('role').populate('userId')
-    if (!company) {
-      return res.status(400).json({ message: "No company details found" });
-
     }
 }
 
 // Update user's current company details
 
 export const currentCompanyUpdate = async (req, res) => {
-<<<<<<<<< Temporary merge branch 1
     try {
         const company = await CurrentCompany.findByIdAndUpdate(req.query.id, { $set: req.body })
         if (!company) {
@@ -195,21 +185,12 @@ export const currentCompanyUpdate = async (req, res) => {
         res.status(200).json({ message: "Company Details Updated successfully" })
     } catch (error) {
         res.status(400).json({ message: error.message });
-
-  try {
-    const company = await CurrentCompany.findByIdAndUpdate(req.params.id, {
-      $set: req.body,
-    });
-    if (!company) {
-      return res.status(400).json({ message: "No company details found" });
-
     }
 }
 
 // Add Document Details
 
 export const addDocument = async (req, res) => {
-
     try {
         const user = await Document.findOne({
             userId: req.query.userId
@@ -245,23 +226,12 @@ export const addDocument = async (req, res) => {
         res.status(201).json({ message: "Document details added" })
     } catch (error) {
         res.status(400).json({ message: error.message });
-
-  try {
-    const user = await Document.findOne({
-      userId: req.query.userId,
-    });
-    if (user) {
-      return res
-        .status(400)
-        .json({ message: "Document details already exists" });
-
     }
 }
 
 // View Document Details
 
 export const viewDocument = async (req, res) => {
-
     try {
         const document = await Document.find({ userId: req.query.userId })//.populate('userId')
         if (!document) {
@@ -271,21 +241,12 @@ export const viewDocument = async (req, res) => {
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
-
-  try {
-    const document = await Document.find({ userId: req.query.userId }); //.populate('userId')
-    if (!document) {
-      return res.status(400).json({ message: "No document details found" });
-    } else {
-      return res.status(200).json(document);
-
     }
 }
 
 // Update Document Details
 
 export const updateDocument = async (req, res) => {
-
     try {
         const document = await Document.findByIdAndUpdate(req.query .id, {
             $set: {
@@ -317,34 +278,6 @@ export const updateDocument = async (req, res) => {
         res.status(200).json({ message: "Document Details Updated successfully" })
     } catch (error) {
         res.status(400).json({ message: error.message });
-
-  try {
-    const document = await Document.findByIdAndUpdate(req.params.id, {
-      $set: {
-        bankDetails: {
-          accountNo: req.body.accountNo,
-          ifsc: req.body.ifsc,
-          branch: req.body.branch,
-          bankName: req.body.bankName,
-          name: req.body.name,
-        },
-        identificationDetails: {
-          adhaarNo: req.body.adharNo,
-          panNo: req.body.panNo,
-          passportNo: req.body.passportNo,
-          uanNo: req.bobodyy.uanNo,
-          pfNo: req.body.pfNo,
-          esicNo: req.body.esicNo,
-        },
-        medicalDetails: {
-          vaccination1Date: req.body.vaccination1Date,
-          vaccination2Date: req.body.vaccination2Date,
-        },
-      },
-    });
-    if (!document) {
-      return res.status(400).json({ message: "No document details found" });
-
     }
 }
 
@@ -494,7 +427,6 @@ export const deleteFam = async (req, res) => {
 
 //Address CRU
 export const createAddress = async (req, res) => {
-
     try {
         const id = req.query.id;
         let Xuser = await User.findById({ _id: id });
@@ -514,28 +446,6 @@ export const createAddress = async (req, res) => {
         res.status(400).json({ message: error.message })
     }
 }
-
-  try {
-    const id = req.body.id;
-    let Xuser = await User.findById({ _id: id });
-    if (!Xuser) return res.status(200).json({ message: "No user" });
-    // console.log(Xuser);
-    let newAddress = await new Address({
-      userId: id,
-      address1: req.body.address1,
-      address2: req.body.address2,
-      city: req.body.city,
-      state: req.body.state,
-      country: req.body.country,
-      postalCode: req.body.postalCode,
-    });
-    await newAddress.save();
-    res.status(200).json({ message: "Address Added" });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
 
 export const updateAddress = async (req, res) => {
     try {
