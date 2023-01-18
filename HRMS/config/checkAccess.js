@@ -1,5 +1,5 @@
 export const checkAccessGet=(user,menu)=>{
-    let obj={access:false,message:null,status:0}
+    let obj={access:false,message:null,status:400}
     let count=0
     if (!menu)  return obj={access:false,message:"give the menu id",status:400}  
     user.isOwner?obj={access:true,message:null}:user?.access?.map(async(item)=>{
@@ -23,7 +23,7 @@ export const checkAccessGet=(user,menu)=>{
 // }
 
 export const checkAccessCreate=(user,menu)=>{
-    let obj={access:false,message:null,status:0}
+    let obj={access:false,message:null,status:400}
     let count=0
     if (!menu)  return obj={access:false,message:"give the menu id",status:400}  
     user.isOwner?obj={access:true,message:null}:user?.access?.map(async(item)=>{
@@ -37,7 +37,7 @@ export const checkAccessCreate=(user,menu)=>{
 }
 
 export const checkAccessUpdate=(user,menu)=>{
-    let obj={access:false,message:null,status:0}
+    let obj={access:false,message:null,status:400}
     let count=0
     if (!menu)  return obj={access:false,message:"give the menu id",status:400}  
     user.isOwner?obj={access:true,message:null}:user?.access?.map(async(item)=>{
@@ -51,7 +51,7 @@ export const checkAccessUpdate=(user,menu)=>{
 }
 
 export const checkAccessDelete=(user,menu)=>{
-    let obj={access:false,message:null,status:0}
+    let obj={access:false,message:null,status:400}
     let count=0
     if (!menu)  return obj={access:false,message:"give the menu id",status:400}  
     user.isOwner?obj={access:true,message:null}:user?.access?.map(async(item)=>{
