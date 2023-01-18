@@ -1,46 +1,51 @@
 import Education from "../models/educationModel.js"
-import User from "../models/userModel.js"
+import {checkAccessCreate, checkAccessGet, checkAccessUpdate} from "../config/checkAccess.js"
+import Menu from "../models/menuModel.js"
 
 export const createEducation=async(req,res)=>{
     try {
-       let id=req.params.id
-    let exUser= await Education.findOne({userId:id});
-         //console.log(exUser);
-  if
-  (exUser) return res.status(200).json({message:"Education details already added"})
-
-  
-    let userEducation =  new Education({
-        userId:id,
-        sslc:{
-            sslcSchoolName:req.body.sslcSchoolName,
-            sslcBoard:req.body.sslcBoard,
-            sslcYearOfPassing:req.body.sslcYearOfPassing,
-            sslcPercentage:req.body.sslcPercentage
-        },
-        hsc:{
-            hscSchoolName:req.body.hscSchoolName,
-            hscBoard:req.body.hscBoard,
-            hscYearOfPassing:req.body.hscYearOfPassing,
-            hscPercentage:req.body.hscPercentage
-        },
-        ug:{
-            ugUniversityName:req.body.ugUniversityName,
-            ugInstituteName:req.body.ugInstituteName,
-            ugDepartmentCourse:req.body.ugDepartmentCourse,
-            ugYearOfPassing:req.body.ugYearOfPassing,
-            ugCgpa:req.body.ugCgpa
-        },
-        pg:{
-            pgUniversityName:req.body.pgUniversityName,
-            pgInstituteName:req.body.pgInstituteName,
-            pgDepartmentCourse:req.body.pgDepartmentCourse,
-            pgYearOfPassing:req.body.pgYearOfPassing,
-            pgCgpa:req.body.pgCgpa
-        }
-    })
-    await userEducation.save();
-    res.status(200).json({message:"Education added"})
+       let id=req.query.userId 
+       
+       let menu = req.body.menuId
+       if (!menu) return res.status(400).json({ message: "menu id is required"});
+       let found = await Menu.findById({_id:menu})
+       if (!found) return res.status(400).json({ message: "menu id is not found"});
+       let obj = checkAccessCreate(req.user, menu)
+       console.log(obj);
+       if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+        let exUser= await Education.findOne({userId:id});
+        if(exUser) return res.status(200).json({message:"Education details already added for this user"})
+        let userEducation =  new Education({
+            userId:id,
+            sslc:{
+                sslcSchoolName:req.body.sslcSchoolName || null,
+                sslcBoard:req.body.sslcBoard || null,
+                sslcYearOfPassing:req.body.sslcYearOfPassing || null,
+                sslcPercentage:req.body.sslcPercentage || null 
+            },
+            hsc:{
+                hscSchoolName:req.body.hscSchoolName || null,
+                hscBoard:req.body.hscBoard || null,
+                hscYearOfPassing:req.body.hscYearOfPassing || null,
+                hscPercentage:req.body.hscPercentage || null
+            },
+            ug:{
+                ugUniversityName:req.body.ugUniversityName || null,
+                ugInstituteName:req.body.ugInstituteName || null,
+                ugDepartmentCourse:req.body.ugDepartmentCourse || null,
+                ugYearOfPassing:req.body.ugYearOfPassing || null,
+                ugCgpa:req.body.ugCgpa || null
+            },
+            pg:{
+                pgUniversityName:req.body.pgUniversityName || null,
+                pgInstituteName:req.body.pgInstituteNamev || null,
+                pgDepartmentCourse:req.body.pgDepartmentCourse || null,
+                pgYearOfPassing:req.body.pgYearOfPassing || null,
+                pgCgpa:req.body.pgCgpa || null
+            }
+        })
+        await userEducation.save();
+        res.status(200).json({message:"Education added"})
     } 
 
     catch (error) {
@@ -48,6 +53,13 @@ export const createEducation=async(req,res)=>{
     } 
 }
 export const updateEducation=async(req,res)=>{
+    let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
+    let obj = checkAccessUpdate(req.user, menu)
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message}); 
     try {
         const id = req.params.id;
         let exEducation= await Education.findOne({userId:id})
@@ -98,6 +110,13 @@ export const getAll = async (req, res) => {
     }
 };
 export const getById = async (req, res) => {
+    let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
+    let obj = checkAccessGet(req.user, menu)
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     try {
         let singleuser=await Education.findById({_id:req.params.id});
         res.status(201).json({data:singleuser});
