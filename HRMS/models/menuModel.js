@@ -12,7 +12,7 @@ const menu=new mongoose.Schema({
     },
     isActive:{
         type:Boolean,
-        default:false
+        default:true
     },
     isBlock:{
         type:Boolean,
