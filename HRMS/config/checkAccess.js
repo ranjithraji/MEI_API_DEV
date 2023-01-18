@@ -12,6 +12,16 @@ export const checkAccessGet=(user,menu)=>{
     return obj
 }
 
+// export const checkAccessGetAll=(user,menu)=>{
+//     let access
+//     user?.isOwner?access=true:user?.access?.map((item)=>{
+//         if(item?.menu?._id==menu){
+//             return item?.get==true?access=true:access=false;
+//         }
+//     })
+//     return access
+// }
+
 export const checkAccessCreate=(user,menu)=>{
     let obj={access:false,message:null,status:0}
     let count=0

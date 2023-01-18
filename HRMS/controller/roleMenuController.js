@@ -11,7 +11,7 @@ export const create = async (req, res) => {
     });
     try {
         await register.save();
-        res.status(201).json({message:"Mapping success"});
+        res.status(201).json({message:"Register success"});
     } catch (error) {
         res.status(400).json({message:error.message});
     }
@@ -19,7 +19,7 @@ export const create = async (req, res) => {
 
 export const update = async (req, res) => {
     try {
-        await Rolemenu.findByIdAndUpdate({_id:req.query.id},{$set:req.body},{new:true});
+        await Rolemenu.findByIdAndUpdate({_id:req.params.id},{$set:req.body},{new:true});
         res.status(201).json({message:"update success"});
     } catch (error) {
         res.status(400).json({message:error.message});
@@ -28,7 +28,7 @@ export const update = async (req, res) => {
 
 export const deleteRoleMenu = async (req, res) => {
     try {
-        await Rolemenu.findByIdAndDelete({_id:req.query.id});
+        await Rolemenu.findByIdAndDelete({_id:req.params.id});
         res.status(201).json({message:"delete success"});
     } catch (error) {
         res.status(400).json({message:error.message});

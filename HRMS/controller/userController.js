@@ -38,7 +38,6 @@ export const reg = async (req, res) => {
                 bloodGroup: req.body.bloodGroup,
                 mobileNo: req.body.mobileNo,
                 role: req.body.role,
-
             })
             try {
                 await register.save()
@@ -169,7 +168,7 @@ export const currentCompany = async (req, res) => {
         }
 
         const company = new CurrentCompany({
-            userId: id,
+            userId: req.body.userId,
             detaprment: req.body.detaprment,
             designation: req.body.designation,
             role: req.body.role,
@@ -204,8 +203,7 @@ export const currentCompanyView = async (req, res) => {
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-    res.status(200).json(company);
-  }
+}
 
 // Update user's current company details
 
@@ -246,34 +244,35 @@ export const addDocument = async (req, res) => {
             return res.status(400).json({ message: "Document details already exists" })
         }
 
-    const document = new Document({
-      userId: req.body.userId,
-      bankDetails: {
-        accountNo: req.body.accountNo,
-        ifsc: req.body.ifsc,
-        branch: req.body.branch,
-        bankName: req.body.bankName,
-        name: req.body.name,
-      },
-      identificationDetails: {
-        adhaarNo: req.body.adharNo,
-        panNo: req.body.panNo,
-        passportNo: req.body.passportNo,
-        uanNo: req.body.uanNo,
-        pfNo: req.body.pfNo,
-        esicNo: req.body.esicNo,
-      },
-      medicalDetails: {
-        vaccination1Date: req.body.vaccination1Date,
-        vaccination2Date: req.body.vaccination2Date,
-      },
-    });
-    await document.save();
-    res.status(201).json({ message: "Document details added" });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+        const document = new Document({
+            userId: req.body.userId,
+            bankDetails: {
+                accountNo: req.body.accountNo,
+                ifsc: req.body.ifsc,
+                branch: req.body.branch,
+                bankName: req.body.bankName,
+                name: req.body.name,
+            },
+            identificationDetails: {
+                adhaarNo: req.body.adharNo,
+                panNo: req.body.panNo,
+                passportNo: req.body.passportNo,
+                uanNo: req.body.uanNo,
+                pfNo: req.body.pfNo,
+                esicNo: req.body.esicNo,
+            },
+            medicalDetails: {
+                vaccination1Date: req.body.vaccination1Date,
+                vaccination2Date: req.body.vaccination2Date,
+            }
+
+        })
+        await document.save()
+        res.status(201).json({ message: "Document details added" })
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
 
 // View Document Details
 
@@ -295,7 +294,8 @@ export const viewDocument = async (req, res) => {
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-  } 
+}
+
 // Update Document Details
 
 export const updateDocument = async (req, res) => {
@@ -380,7 +380,7 @@ export const addPreviousCompany = async (req, res) => {
         res.status(400).json({ message: error.message });
 
     }
-  } 
+}
 
 // View user's previous company details
 
@@ -397,12 +397,13 @@ export const viewPreviousCompany = async (req, res) => {
         if (!company) {
             return res.status(400).json({ message: "No company details found" })
         } else {
-            return res.status(200).json(company) //.map((item) => item.previewsCompanies)
+            return res.status(200).json({data:company}) //.map((item) => item.previewsCompanies)
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-  }
+
+}
 
 // Update user's previous company details
 
@@ -439,7 +440,10 @@ export const previousCompanyUpdate = async (req, res) => {
         res.status(400).json({ message: error.message });
 
     }
-} 
+}
+
+
+
 
 // user Family Details CRU
 
@@ -542,10 +546,8 @@ export const createAddress = async (req, res) => {
         const id = req.query.id;
         let Xuser = await User.findById({ _id: id });
         if (!Xuser) return res.status(200).json({ message: "No user" })
-        // let user_Id= id;
-        let User_add = await Address.findOne({userId:id});
-        if(User_add) return res.status(200).json({ message: "Address Already Added" })
-            let newAddress = await new Address({
+        // console.log(Xuser);
+        let newAddress = await new Address({
             userId: id,
             address1: req.body.address1,
             address2: req.body.address2,

@@ -7,21 +7,27 @@ const family = new mongoose.Schema({
     },
     name: {
         type: String,
+        required: true
     },
     relationship: {
         type: String,
+        required: true
     },
     occupation: {
         type: String,
+        required: true
     },
     dob: {
         type: String,
+        required: true
     },
     adhaarNo: {
         type: Number,
+        required: true
     },
     emergencyContact: {
         type: Number,
+        required: true
     }, 
    
 }, {
