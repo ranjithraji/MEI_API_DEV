@@ -397,7 +397,7 @@ export const viewPreviousCompany = async (req, res) => {
         if (!company) {
             return res.status(400).json({ message: "No company details found" })
         } else {
-            return res.status(200).json(company) //.map((item) => item.previewsCompanies)
+            return res.status(200).json({data:company}) //.map((item) => item.previewsCompanies)
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
