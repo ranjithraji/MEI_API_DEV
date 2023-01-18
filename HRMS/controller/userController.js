@@ -36,6 +36,7 @@ export const reg = async (req, res) => {
                 dob: req.body.dob,
                 gender: req.body.gender,
                 bloodGroup: req.body.bloodGroup,
+                marriageStatus: req.body.marriageStatus,
                 mobileNo: req.body.mobileNo,
                 role: req.body.role,
             })
@@ -66,6 +67,7 @@ export const ownerReg = async (req, res) => {
                 dob: req.body.dob,
                 gender: req.body.gender,
                 bloodGroup: req.body.bloodGroup,
+                marriageStatus: req.body.marriageStatus,
                 mobileNo: req.body.mobileNo,
                 isOwner: true
             })
