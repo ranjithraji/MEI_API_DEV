@@ -91,6 +91,9 @@ export const updateEducation=async(req,res)=>{
     }  
 }
 export const getAll = async (req, res) => {
+    let menu = req.body.menuId
+    let obj = checkAccessGet(req.user, menu)
+    if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });  
     try {
         let education=await Education.find();
         res.status(201).json({data:education});

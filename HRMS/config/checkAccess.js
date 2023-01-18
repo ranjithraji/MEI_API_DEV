@@ -1,5 +1,5 @@
 export const checkAccessGet=(user,menu)=>{
-    let obj={access:false,message:null,status:0}
+    let obj={access:false,message:null,status:400}
     user.isOwner?obj={access:true,message:null}:user?.access?.map((item)=>{
         if (!menu)  return obj={access:false,message:"give the menu id",status:400}       
         if(item?.menu?._id==menu){
@@ -10,7 +10,7 @@ export const checkAccessGet=(user,menu)=>{
 }
 
 export const checkAccessCreate=(user,menu)=>{
-    let obj={access:false,message:null,status:0}
+    let obj={access:false,message:null,status:400}
     user.isOwner?obj={access:true,message:null}:user?.access?.map((item)=>{
         if (!menu)  return obj={access:false,message:"give the menu id",status:400}       
         if(item?.menu?._id==menu){
@@ -21,7 +21,7 @@ export const checkAccessCreate=(user,menu)=>{
 }
 
 export const checkAccessUpdate=(user,menu)=>{
-    let obj={access:false,message:null,status:0}
+    let obj={access:false,message:null,status:400}
     user.isOwner?obj={access:true,message:null}:user?.access?.map((item)=>{
         if (!menu)  return obj={access:false,message:"give the menu id",status:400}       
         if(item?.menu?._id==menu){
@@ -32,7 +32,7 @@ export const checkAccessUpdate=(user,menu)=>{
 }
 
 export const checkAccessDelete=(user,menu)=>{
-    let obj={access:false,message:null,status:0}
+    let obj={access:false,message:null,status:400}
     // console.log(user);
     user.isOwner?obj={access:true,message:null}:user?.access?.map((item)=>{
         console.log(item);
