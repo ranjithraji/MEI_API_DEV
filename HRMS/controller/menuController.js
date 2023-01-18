@@ -1,6 +1,8 @@
 import Menu from '../models/menuModel.js'
 
 export const createMenu=async(req,res)=>{
+    const found=await Menu.findOne({menuName:req.body.menuName})
+    if(found) return res.status(400).json({message:"Menu already exists"});
     try {
         const data =await new Menu({
             menuName:req.body.menuName,
