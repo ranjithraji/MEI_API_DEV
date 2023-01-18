@@ -352,7 +352,7 @@ export const addPreviousCompany = async (req, res) => {
     if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     try {
         const company = {
-            companyName: req.body.companyName,
+            companyName: req.body.companyName, 
             designation: req.body.designation,
             description: req.body.description,
             salary: req.body.salary,
