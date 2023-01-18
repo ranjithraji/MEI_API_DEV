@@ -7,6 +7,6 @@ const router = express.Router();
 router.post("/create",[auth, authz],createEducation)
 router.put("/update",[auth, authz],updateEducation)
 router.get("/getAll",[auth, authz],getAll)
-router.get("/getbyid",auth,getById)
+router.get("/getbyid/:id",[auth, authz],getById)
 
 export default router;
