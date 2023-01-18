@@ -8,6 +8,7 @@ import Address from "../models/addressModel.js";
 import CurrentCompany from "../models/currentComModel.js";
 import Document from "../models/documentModel.js";
 import Experience from "../models/experienceModel.js";
+import Menu from "../models/menuModel.js";
 
 const saltRounds = 10;
 dotenv.config();
@@ -15,6 +16,9 @@ dotenv.config();
 export const reg = async (req, res) => {
     let email = req.body.email
     let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
     let obj = checkAccessCreate(req.user, menu)
     console.log(obj);
     if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
@@ -94,9 +98,13 @@ export const login = async (req, res) => {
 // Update the User
 export const updateUser = async (req, res) => {
     try {
-        let obj = checkAccessUpdate(req.user, menu)
         let menu = req.body.menuId
-        if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });
+        if (!menu) return res.status(400).json({ message: "menu id is required"});
+        let found = await Menu.findById({_id:menu})
+        if (!found) return res.status(400).json({ message: "menu id is not found"});
+        let obj = checkAccessUpdate(req.user, menu)
+        console.log(obj);
+        if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
         const user = await User.findByIdAndUpdate(req.body.id, { $set: req.body }, { new: true })
         res.status(200).json({ meesage: "Updated successfully" })
     } catch (error) {
@@ -109,8 +117,12 @@ export const updateUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
     let email = req.body.email
     let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
     let obj = checkAccessDelete(req.user, menu)
-    if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     try {
         const user = await User.findOneAndRemove({ email: email });
         if (!user) return res.status(404).json({ message: 'User not found' });
@@ -143,15 +155,18 @@ export const getAll = async (req, res) => {
 // Adding User's Current Company Details 
 
 export const currentCompany = async (req, res) => {
-  try {
-    const existUser = await CurrentCompany.findOne({
-      userId: req.query.userId,
-    });
-    if (existUser) {
-      return res
-        .status(400)
-        .json({ message: "This user details already exists" });
-    }
+    let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
+    let obj = checkAccessCreate(req.user, menu)
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    try {
+        const existUser = await CurrentCompany.findById({ userId: req.params.userId })
+        if (existUser) {
+            return res.status(400).json({ message: "This user details already exists" })
+        }
 
         const company = new CurrentCompany({
             userId: id,
@@ -173,23 +188,35 @@ export const currentCompany = async (req, res) => {
 // View user's current company details
 
 export const currentCompanyView = async (req, res) => {
-  try {
-    const company = await CurrentCompany.find({ userId: req.query.userId }); //.populate('role').populate('userId')
-    if (!company) {
-      return res.status(400).json({ message: "No company details found" });
+    let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
+    let obj = checkAccessGet(req.user, menu)
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    try {
+        const company = await CurrentCompany.find({ userId: req.query.userId })//.populate('role').populate('userId')
+        if (!company) {
+            return res.status(400).json({ message: "No company details found" })
+        }
+        res.status(200).json(company)
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
     res.status(200).json(company);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
   }
-};
 
 // Update user's current company details
 
 export const currentCompanyUpdate = async (req, res) => {
     let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
     let obj = checkAccessUpdate(req.user, menu)
-    if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     try {
         const company = await CurrentCompany.findByIdAndUpdate(req.query.id, { $set: req.body })
         if (!company) {
@@ -205,8 +232,12 @@ export const currentCompanyUpdate = async (req, res) => {
 
 export const addDocument = async (req, res) => {
     let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
     let obj = checkAccessCreate(req.user, menu)
-    if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     try {
         const user = await Document.findOne({
             userId: req.query.userId
@@ -247,24 +278,34 @@ export const addDocument = async (req, res) => {
 // View Document Details
 
 export const viewDocument = async (req, res) => {
-  try {
-    const document = await Document.find({ userId: req.query.userId }); //.populate('userId')
-    if (!document) {
-      return res.status(400).json({ message: "No document details found" });
-    } else {
-      return res.status(200).json(document);
+    let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
+    let obj = checkAccessGet(req.user, menu)
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    try {
+        const document = await Document.findOne({ userId: req.query.userId })//.populate('userId')
+        if (!document) {
+            return res.status(400).json({ message: "No document details found" })
+        } else {
+            return res.status(200).json({data:document})
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
+  } 
 // Update Document Details
 
 export const updateDocument = async (req, res) => {
     let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
     let obj = checkAccessUpdate(req.user, menu)
-    if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     try {
         const document = await Document.findByIdAndUpdate(req.query .id, {
             $set: {
@@ -302,88 +343,114 @@ export const updateDocument = async (req, res) => {
 // Add user's previous company details
 
 export const addPreviousCompany = async (req, res) => {
-  try {
-    const company = {
-      companyName: req.body.companyName,
-      designation: req.body.designation,
-      description: req.body.description,
-      salary: req.body.salary,
-      startDate: req.body.startDate,
-      endDate: req.body.endDate,
-      experience: req.body.experience,
-    };
-    const newExperience = new Experience({
-      userId: req.body.userId,
-      previewsCompanies: [],
-    });
-    const user = await Experience.findOne({
-      userId: req.query.userId,
-    });
-    if (user) {
-      user.previewsCompanies.push(company);
-      await user.save();
-      return res.status(201).json({ message: "Experience details added" });
-    } else {
-      newExperience.previewsCompanies.push(company);
-      await newExperience.save();
-      return res.status(201).json({ message: "Experience details added" });
+    let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
+    let obj = checkAccessCreate(req.user, menu)
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    try {
+        const company = {
+            companyName: req.body.companyName,
+            designation: req.body.designation,
+            description: req.body.description,
+            salary: req.body.salary,
+            startDate: req.body.startDate,
+            endDate: req.body.endDate,
+            experience: req.body.experience,
+        }
+        const newExperience = new Experience({
+            userId: req.body.userId,
+            previewsCompanies: []
+        })
+        const user = await Experience.findOne({
+            userId: req.body.userId
+        })
+        if (user) {
+            user.previewsCompanies.push(company)
+            await user.save()
+            return res.status(201).json({ message: "Experience details added" })
+        } else {
+            newExperience.previewsCompanies.push(company)
+            await newExperience.save()
+            return res.status(201).json({ message: "Experience details added" })
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+
     }
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+  } 
 
 // View user's previous company details
 
 export const viewPreviousCompany = async (req, res) => {
-  try {
-    const company = await Experience.find({ userId: req.query.userId }); //.populate('userId')
-    if (!company) {
-      return res.status(400).json({ message: "No company details found" });
-    } else {
-      return res.status(200).json(company); //.map((item) => item.previewsCompanies)
+    let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
+    let obj = checkAccessGet(req.user, menu)
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    try {
+        const company = await Experience.find({ userId: req.body.userId })//.populate('userId')
+        if (!company) {
+            return res.status(400).json({ message: "No company details found" })
+        } else {
+            return res.status(200).json(company) //.map((item) => item.previewsCompanies)
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-  } catch (error) {
-    res.status(400).json({ message: error.message });
   }
-};
 
 // Update user's previous company details
 
 export const previousCompanyUpdate = async (req, res) => {
-  try {
-    const user = await Experience.findOne({ userId: req.query.userId });
-    if (!user) {
-      return res
-        .status(400)
-        .json({ message: "No company details found in this user" });
-    } else {
-      const company = user.previewsCompanies.id(req.body.id);
-      if (!company) {
-        return res.status(400).json({ message: "No company details found" });
-      } else {
-        company.companyName = req.body.companyName;
-        company.designation = req.body.designation;
-        company.description = req.body.description;
-        company.salary = req.body.salary;
-        company.startDate = req.body.startDate;
-        company.endDate = req.body.endDate;
-        company.experience = req.body.experience;
-        await user.save();
-        return res.status(200).json({ message: "Company details updated" });
-      }
+    let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
+    let obj = checkAccessUpdate(req.user, menu)
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    try {
+        const user = await Experience.findOne({ userId: req.body.userId })
+        if (!user) {
+            return res.status(400).json({ message: "No company details found in this user" })
+        } else {
+            const company = user.previewsCompanies.id(req.body.id)
+            if (!company) {
+                return res.status(400).json({ message: "No company details found" })
+            } else {
+                company.companyName = req.body.companyName
+                company.designation = req.body.designation
+                company.description = req.body.description
+                company.salary = req.body.salary
+                company.startDate = req.body.startDate
+                company.endDate = req.body.endDate
+                company.experience = req.body.experience
+                await user.save()
+                return res.status(200).json({ message: "Company details updated" })
+            }
+
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+
     }
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+} 
 
 // user Family Details CRU
 
 export const UserFam = async (req, res) => {
     let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
     let obj = checkAccessCreate(req.user, menu)
-    if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     try {
         let id = req.query.id;
         let Xuser = await User.findById({ _id: id });
@@ -409,8 +476,12 @@ export const UserFam = async (req, res) => {
 
 export const updateFam = async (req, res) => {
     let menu = req.body.menuId
-    let obj = checkAccessUpdate(req.user, menu) 
-    if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
+    let obj = checkAccessUpdate(req.user, menu)
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     try {
         await Family.findByIdAndUpdate({ _id: req.body.id }, { $set: req.body });
         res.status(201).json({ message: "update success" });
@@ -421,8 +492,12 @@ export const updateFam = async (req, res) => {
 
 export const getFam = async (req, res) => {
     let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
     let obj = checkAccessGet(req.user, menu)
-    if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     try {
         let id = req.query.id;
         let Xuser = await User.findById({ _id: id });
@@ -437,8 +512,12 @@ export const getFam = async (req, res) => {
 
 export const deleteFam = async (req, res) => {
     let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
     let obj = checkAccessDelete(req.user, menu)
-    if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     let id = req.query.id;
     try {
         const user = await Family.findOneAndRemove({ _id: id });
@@ -453,8 +532,12 @@ export const deleteFam = async (req, res) => {
 //Address CRU
 export const createAddress = async (req, res) => {
     let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
     let obj = checkAccessCreate(req.user, menu)
-    if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     try {
         const id = req.query.id;
         let Xuser = await User.findById({ _id: id });
@@ -480,8 +563,12 @@ export const createAddress = async (req, res) => {
 
 export const updateAddress = async (req, res) => {
     let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
     let obj = checkAccessUpdate(req.user, menu)
-    if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     try {
         const id = req.query.id;
         let Xuser = await Address.findOne({ userId: id })
@@ -495,8 +582,12 @@ export const updateAddress = async (req, res) => {
 
 export const viewUserAddress = async (req, res) => {
     let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
     let obj = checkAccessGet(req.user, menu)
-    if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     try {
         const id = req.query.id;
         let Xuser = await Address.findOne({ userId: id })
