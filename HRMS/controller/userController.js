@@ -8,6 +8,7 @@ import Address from "../models/addressModel.js";
 import CurrentCompany from "../models/currentComModel.js";
 import Document from "../models/documentModel.js";
 import Experience from "../models/experienceModel.js";
+import Menu from "../models/menuModel.js";
 
 const saltRounds = 10;
 dotenv.config();
@@ -47,32 +48,33 @@ export const reg = async (req, res) => {
 
 
 export const ownerReg = async (req, res) => {
-  let email = req.body.email;
-  let exUser = await User.findOne({ email: email });
-  if (exUser) {
-    return res.json({ message: "email exists please login" });
-  } else {
-    bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
-      let register = new User({
-        email: req.body.email,
-        password: hash,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        dob: req.body.dob,
-        gender: req.body.gender,
-        bloodGroup: req.body.bloodGroup,
-        mobileNo: req.body.mobileNo,
-        isOwner: true,
-      });
-      try {
-        await register.save();
-        res.status(201).json({ message: "Owner Register success" });
-      } catch (error) {
-        res.status(400).json({ message: error.message });
-      }
-    });
-  }
-};
+    let email = req.body.email
+    let exUser = await User.findOne({ email: email })
+    if (exUser) {
+        return res.json({ message: "email exists please login" })
+    }
+    else {
+        bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
+            let register = new User({
+                email: req.body.email,
+                password: hash,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                dob: req.body.dob,
+                gender: req.body.gender,
+                bloodGroup: req.body.bloodGroup,
+                mobileNo: req.body.mobileNo,
+                isOwner: true
+            })
+            try {
+                await register.save()
+                res.status(201).json({ message: "Owner Register success" })
+            } catch (error) {
+                res.status(400).json({ message: error.message });
+            }
+        })
+    }
+}
 
 export const login = async (req, res) => {
   let email = req.body.email;
@@ -93,17 +95,22 @@ export const login = async (req, res) => {
 
 // Update the User
 export const updateUser = async (req, res) => {
-  try {
-    const user = await User.findByIdAndUpdate(
-      req.params.id,
-      { $set: req.body },
-      { new: true }
-    );
-    res.status(200).json({ meesage: "Updated successfully" });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+    try {
+        let menu = req.body.menuId
+        if (!menu) return res.status(400).json({ message: "menu id is required"});
+        let found = await Menu.findById({_id:menu})
+        if (!found) return res.status(400).json({ message: "menu id is not found"});
+        let obj = checkAccessUpdate(req.user, menu)
+        console.log(obj);
+        if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+        const user = await User.findByIdAndUpdate(req.body.id, { $set: req.body }, { new: true })
+        res.status(200).json({ meesage: "Updated successfully" })
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+
 
 export const deleteUser = async (req, res) => {
   let email = req.body.email;
@@ -134,7 +141,8 @@ export const getAll = async (req, res) => {
   }
 };
 
-// Adding User's Current Company Details
+
+// Adding User's Current Company Details 
 
 export const currentCompany = async (req, res) => {
     let menu = req.body.menuId
@@ -166,17 +174,23 @@ export const currentCompany = async (req, res) => {
 // View user's current company details
 
 export const currentCompanyView = async (req, res) => {
-  try {
-    const company = await CurrentCompany.findOne({ userId: req.query.userId }); //.populate('role').populate('userId')
-    if(!req.query.userId) return res.status(400).json({ message: "Please give userId" });
-    if (!company) {
-      return res.status(400).json({ message: "No company details found in this userId" });
+    let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
+    let obj = checkAccessGet(req.user, menu)
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    try {
+        const company = await CurrentCompany.find({ userId: req.query.userId })//.populate('role').populate('userId')
+        if (!company) {
+            return res.status(400).json({ message: "No company details found" })
+        }
+        res.status(200).json(company)
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-    res.status(200).json(company);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+}
 
 // Update user's current company details
 
@@ -197,60 +211,72 @@ export const currentCompanyUpdate = async (req, res) => {
 // Add Document Details
 
 export const addDocument = async (req, res) => {
-  try {
-    const user = await Document.findOne({
-      userId: req.query.userId,
-    });
-    if (user) {
-      return res
-        .status(400)
-        .json({ message: "Document details already exists" });
-    }
+    let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
+    let obj = checkAccessCreate(req.user, menu)
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    try {
+        const user = await Document.findOne({
+            userId: req.query.userId
+        })
+        if (user) {
+            return res.status(400).json({ message: "Document details already exists" })
+        }
 
-    const document = new Document({
-      userId: req.query.userId,
-      bankDetails: {
-        accountNo: req.body.accountNo,
-        ifsc: req.body.ifsc,
-        branch: req.body.branch,
-        bankName: req.body.bankName,
-        name: req.body.name,
-      },
-      identificationDetails: {
-        adhaarNo: req.body.adharNo,
-        panNo: req.body.panNo,
-        passportNo: req.body.passportNo,
-        uanNo: req.body.uanNo,
-        pfNo: req.body.pfNo,
-        esicNo: req.body.esicNo,
-      },
-      medicalDetails: {
-        vaccination1Date: req.body.vaccination1Date,
-        vaccination2Date: req.body.vaccination2Date,
-      },
-    });
-    await document.save();
-    res.status(201).json({ message: "Document details added" });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+        const document = new Document({
+            userId: req.body.userId,
+            bankDetails: {
+                accountNo: req.body.accountNo,
+                ifsc: req.body.ifsc,
+                branch: req.body.branch,
+                bankName: req.body.bankName,
+                name: req.body.name,
+            },
+            identificationDetails: {
+                adhaarNo: req.body.adharNo,
+                panNo: req.body.panNo,
+                passportNo: req.body.passportNo,
+                uanNo: req.body.uanNo,
+                pfNo: req.body.pfNo,
+                esicNo: req.body.esicNo,
+            },
+            medicalDetails: {
+                vaccination1Date: req.body.vaccination1Date,
+                vaccination2Date: req.body.vaccination2Date,
+            }
+
+        })
+        await document.save()
+        res.status(201).json({ message: "Document details added" })
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
 
 // View Document Details
 
 export const viewDocument = async (req, res) => {
-  try {
-    const document = await Document.findOne({ userId: req.query.userId }); //.populate('userId')
-    if(!req.query.userId) return res.status(400).json({ message: "Please give userId" });  
-    if (!document) {
-      return res.status(400).json({ message: "No document details found" });
-    } else {
-      return res.status(200).json(document);
+    let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
+    let obj = checkAccessGet(req.user, menu)
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    try {
+        const document = await Document.findOne({ userId: req.query.userId })//.populate('userId')
+        if (!document) {
+            return res.status(400).json({ message: "No document details found" })
+        } else {
+            return res.status(200).json({data:document})
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+}
 
 // Update Document Details
 
@@ -291,85 +317,107 @@ export const updateDocument = async (req, res) => {
 // Add user's previous company details
 
 export const addPreviousCompany = async (req, res) => {
-  const userId=req.query.userId;
-  try {
-    const company = {
-      companyName: req.body.companyName,
-      designation: req.body.designation,
-      description: req.body.description,
-      salary: req.body.salary,
-      startDate: req.body.startDate,
-      endDate: req.body.endDate,
-      experience: req.body.experience,
-    };
-    if(!userId) return res.status(400).json({ message: "Please give userId" });
-    const newExperience = new Experience({
-      userId: userId,
-      previewsCompanies: [],
-    });
-    const user = await Experience.findOne({
-      userId: userId,
-    });
-    if (user) {
-      user.previewsCompanies.push(company);
-      await user.save();
-      return res.status(201).json({ message: "Experience details added" });
-    } else {
-      newExperience.previewsCompanies.push(company);
-      await newExperience.save();
-      return res.status(201).json({ message: "Experience details added" });
+    let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
+    let obj = checkAccessCreate(req.user, menu)
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    try {
+        const company = {
+            companyName: req.body.companyName,
+            designation: req.body.designation,
+            description: req.body.description,
+            salary: req.body.salary,
+            startDate: req.body.startDate,
+            endDate: req.body.endDate,
+            experience: req.body.experience,
+        }
+        const newExperience = new Experience({
+            userId: req.body.userId,
+            previewsCompanies: []
+        })
+        const user = await Experience.findOne({
+            userId: req.body.userId
+        })
+        if (user) {
+            user.previewsCompanies.push(company)
+            await user.save()
+            return res.status(201).json({ message: "Experience details added" })
+        } else {
+            newExperience.previewsCompanies.push(company)
+            await newExperience.save()
+            return res.status(201).json({ message: "Experience details added" })
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+
     }
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+}
 
 // View user's previous company details
 
 export const viewPreviousCompany = async (req, res) => {
-  try {
-    const company = await Experience.findOne({ userId: req.query.userId }); //.populate('userId')
-    if(!req.query.userId) return res.status(400).json({ message: "Please give userId" });
-    if (!company) {
-      return res.status(400).json({ message: "No company details found" });
-    } else {
-      return res.status(200).json(company); //.map((item) => item.previewsCompanies)
+    let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
+    let obj = checkAccessGet(req.user, menu)
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    try {
+        const company = await Experience.find({ userId: req.body.userId })//.populate('userId')
+        if (!company) {
+            return res.status(400).json({ message: "No company details found" })
+        } else {
+            return res.status(200).json(company) //.map((item) => item.previewsCompanies)
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+
+}
 
 // Update user's previous company details
 
 export const previousCompanyUpdate = async (req, res) => {
-  try {
-    const user = await Experience.findOne({ userId: req.query.userId });
-    if(!req.query.userId) return res.status(400).json({ message: "Please give userId" });
-    if (!user) {
-      return res
-        .status(400)
-        .json({ message: "No company details found in this user" });
-    } else {
-      const company = user.previewsCompanies.id(req.body.id);
-      if (!company) {
-        return res.status(400).json({ message: "No company details found" });
-      } else {
-        company.companyName = req.body.companyName;
-        company.designation = req.body.designation;
-        company.description = req.body.description;
-        company.salary = req.body.salary;
-        company.startDate = req.body.startDate;
-        company.endDate = req.body.endDate;
-        company.experience = req.body.experience;
-        await user.save();
-        return res.status(200).json({ message: "Company details updated" });
-      }
+    let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
+    let obj = checkAccessUpdate(req.user, menu)
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    try {
+        const user = await Experience.findOne({ userId: req.body.userId })
+        if (!user) {
+            return res.status(400).json({ message: "No company details found in this user" })
+        } else {
+            const company = user.previewsCompanies.id(req.body.id)
+            if (!company) {
+                return res.status(400).json({ message: "No company details found" })
+            } else {
+                company.companyName = req.body.companyName
+                company.designation = req.body.designation
+                company.description = req.body.description
+                company.salary = req.body.salary
+                company.startDate = req.body.startDate
+                company.endDate = req.body.endDate
+                company.experience = req.body.experience
+                await user.save()
+                return res.status(200).json({ message: "Company details updated" })
+            }
+
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+
     }
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+}
+
+
+
 
 // user Family Details CRU
 
@@ -398,8 +446,12 @@ export const UserFam = async (req, res) => {
 
 export const updateFam = async (req, res) => {
     let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
     let obj = checkAccessUpdate(req.user, menu)
-    if (obj.access == false || obj.message !== null) return res.status(obj.status).json({ message: obj.message });
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     try {
         await Family.findByIdAndUpdate({ _id: req.body.id }, { $set: req.body });
         res.status(201).json({ message: "update success" });
@@ -470,12 +522,19 @@ export const updateAddress = async (req, res) => {
 };
 
 export const viewUserAddress = async (req, res) => {
-  try {
-    const id = req.body.id;
-    let Xuser = await Address.findOne({ userId: id });
-    if (!Xuser) return res.status(200).json({ message: "No User" });
-    res.status(200).json({ data: Xuser });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+    let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
+    let obj = checkAccessGet(req.user, menu)
+    console.log(obj);
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    try {
+        const id = req.query.id;
+        let Xuser = await Address.findOne({ userId: id })
+        if (!Xuser) return res.status(200).json({ message: "No User" })
+        res.status(200).json({ data: Xuser })
+    } catch (error) {
+        res.status(400).json({ message: error.message })
+    }
+}

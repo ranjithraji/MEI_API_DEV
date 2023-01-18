@@ -19,7 +19,8 @@ export const create=async(req,res)=>{
 
 export const getAll=async(req,res)=>{
     let menu=req.body.requestName
-    let access=checkAccessGet(req.user,menu)
+    let access=checkAccessGet(req.user,menu) 
+    console.log(access);
     if(!access && !req.user.isOwner) return res.status(401).json({message:"your not right person to do this"});
     try {
         const data =await Request.find()
