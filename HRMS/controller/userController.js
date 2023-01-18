@@ -38,7 +38,6 @@ export const reg = async (req, res) => {
                 bloodGroup: req.body.bloodGroup,
                 mobileNo: req.body.mobileNo,
                 role: req.body.role,
-
             })
             try {
                 await register.save()
@@ -156,17 +155,20 @@ export const getAll = async (req, res) => {
 
 export const currentCompany = async (req, res) => {
     let menu = req.body.menuId
+    if (!menu) return res.status(400).json({ message: "menu id is required"});
+    let found = await Menu.findById({_id:menu})
+    if (!found) return res.status(400).json({ message: "menu id is not found"});
     let obj = checkAccessCreate(req.user, menu)
     console.log(obj);
     if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     try {
-        const existUser = await CurrentCompany.findOne({ userId: id })
+        const existUser = await CurrentCompany.findById({ userId: req.params.userId })
         if (existUser) {
             return res.status(400).json({ message: "This user details already exists" })
         }
 
         const company = new CurrentCompany({
-            userId: id,
+            userId: req.body.userId,
             detaprment: req.body.detaprment,
             designation: req.body.designation,
             role: req.body.role,
@@ -544,10 +546,8 @@ export const createAddress = async (req, res) => {
         const id = req.query.id;
         let Xuser = await User.findById({ _id: id });
         if (!Xuser) return res.status(200).json({ message: "No user" })
-        // let user_Id= id;
-        let User_add = await Address.findOne({userId:id});
-        if(User_add) return res.status(200).json({ message: "Address Already Added" })
-            let newAddress = await new Address({
+        // console.log(Xuser);
+        let newAddress = await new Address({
             userId: id,
             address1: req.body.address1,
             address2: req.body.address2,
