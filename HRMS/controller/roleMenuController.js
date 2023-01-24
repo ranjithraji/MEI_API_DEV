@@ -20,7 +20,7 @@ export const create = async (req, res) => {
 export const update = async (req, res) => {
     try {
         await Rolemenu.findByIdAndUpdate({_id:req.params.id},{$set:req.body},{new:true});
-        res.status(201).json({message:"update success"});
+        res.status(200).json({message:"update success"});
     } catch (error) {
         res.status(400).json({message:error.message});
     }
@@ -29,7 +29,7 @@ export const update = async (req, res) => {
 export const deleteRoleMenu = async (req, res) => {
     try {
         await Rolemenu.findByIdAndDelete({_id:req.params.id});
-        res.status(201).json({message:"delete success"});
+        res.status(200).json({message:"delete success"});
     } catch (error) {
         res.status(400).json({message:error.message});
     }
@@ -52,7 +52,7 @@ export const getById = async (req, res) => {
 export const getAll = async (req, res) => {
     try {
         let user=await Rolemenu.find().populate("role");
-        res.status(201).json({data:user});
+        res.status(200).json({data:user});
     } catch (error) {
         res.status(400).json({message:error.message});
     }
