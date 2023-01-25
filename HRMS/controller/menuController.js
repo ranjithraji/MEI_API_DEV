@@ -8,7 +8,7 @@ export const createMenu=async(req,res)=>{
     let menu = req.body.menuName;
     let gr= menu?.toUpperCase().slice(0,3)
     const newcode=code+gr+z
-    console.log(newcode);
+    // console.log(newcode);
     const found=await Menu.findOne({menuName:menu})
     if(found) return res.status(400).json({message:"Menu already exists"});
     try {
