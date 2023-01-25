@@ -1,12 +1,20 @@
 import Menu from '../models/menuModel.js'
 
 export const createMenu=async(req,res)=>{
-    const found=await Menu.findOne({menuName:req.body.menuName})
+
+    const num = Math.random() * (100 - 1 + 1) + 1
+    let z= num.toString().slice(0,2)
+    let code = "HRM"
+    let menu = req.body.menuName;
+    let gr= menu?.toUpperCase().slice(0,3)
+    const newcode=code+gr+z
+    console.log(newcode);
+    const found=await Menu.findOne({menuName:menu})
     if(found) return res.status(400).json({message:"Menu already exists"});
     try {
         const data =await new Menu({
-            menuName:req.body.menuName,
-            menuCode:req.body.menuCode 
+            menuName:menu,
+            menuCode:newcode 
         })
         await data.save()
         res.status(201).json({message:"Menu Created"})
@@ -52,5 +60,47 @@ export const updatemenu=async(req,res)=>{
     }
 }
 
+export const menuTable=async(req,res)=>{
+    let obj
+    try {
+    const menu= await Menu.find()
+    if(!menu) return res.status(200).json({message:"Sorry no Data"})
+    obj= {
+    "columns": [
+    {
+    "label": "Menu",
+    "field": "name",
+    "width": 270,
+    
+    },
+    {
+    "label": "Menu Code",
+    "field": "menuCode",
+    "width": 170
+    },
+    {
+    "label": "View",
+    "field": "view",
+    "width": 150
+    },
+    {
+        "label": "Edit",
+        "field": "Edit",
+        "width": 150
+        },
+    ],
+    
+    "rows": [
+    
+    ]
+    }
+    menu?.map((item)=>(
+    obj.rows.push({"name" : item.menuName,"menuCode" : item.menuCode,})
+    ))
+    res.status(200).json({data:obj})
+    } catch (error) {
+    res.status(400).json({message:error.message});
+    }
+    }
 
 
