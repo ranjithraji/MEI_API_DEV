@@ -1,6 +1,8 @@
 import Rolemenu from "../models/rolemenuModel.js";
 
 export const create = async (req, res) => {
+    let foundRoleMenu=await Rolemenu.findOne({role:req.body.role,menu:req.body.menu})
+    if(foundRoleMenu) return res.status(400).json({message:"This menu already mapped with this role"});
     let register = new Rolemenu({
         role: req.body.role,
         menu: req.body.menu,
@@ -36,6 +38,16 @@ export const deleteRoleMenu = async (req, res) => {
 };
 
 export const getById = async (req, res) => {
+    try {
+        let user=await Rolemenu.find({role:req.params.id})
+        .populate({ path: 'role', model: 'Role' })
+        .populate({ path: 'menu', model: 'Menu' });
+        res.status(200).json({data:user});
+    } catch (error) {
+        res.status(400).json({message:error.message});
+    }
+};
+export const getByIdForAccess = async (req, res) => {
     let obj=[]
     try {
         let user=await Rolemenu.find({role:req.params.id}).populate("menu");
@@ -51,10 +63,11 @@ export const getById = async (req, res) => {
 
 export const getAll = async (req, res) => {
     try {
-        let user=await Rolemenu.find().populate("role");
+        let user=await Rolemenu.find()
+        .populate({ path: 'role', model: 'Role' })
+        .populate({ path: 'menu', model: 'Menu' });;
         res.status(200).json({data:user});
     } catch (error) {
         res.status(400).json({message:error.message});
     }
 };
-
