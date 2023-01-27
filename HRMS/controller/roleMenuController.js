@@ -20,6 +20,7 @@ export const create = async (req, res) => {
 };
 
 export const update = async (req, res) => {
+    console.log(req.body);
     try {
         await Rolemenu.findByIdAndUpdate({_id:req.params.id},{$set:req.body},{new:true});
         res.status(200).json({message:"update success"});
