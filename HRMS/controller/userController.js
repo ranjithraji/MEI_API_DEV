@@ -36,6 +36,7 @@ export const reg = async (req, res) => {
                 dob: req.body.dob,
                 gender: req.body.gender,
                 bloodGroup: req.body.bloodGroup,
+                marriageStatus: req.body.marriageStatus,
                 mobileNo: req.body.mobileNo,
                 role: req.body.role,
             })
@@ -66,6 +67,7 @@ export const ownerReg = async (req, res) => {
                 dob: req.body.dob,
                 gender: req.body.gender,
                 bloodGroup: req.body.bloodGroup,
+                marriageStatus: req.body.marriageStatus,
                 mobileNo: req.body.mobileNo,
                 isOwner: true
             })
@@ -133,7 +135,7 @@ export const deleteUser = async (req, res) => {
 
 export const profile = async (req, res) => {
     try {
-        const view = await User.find({ _id: req.user.id }).select("-password")
+        const view = await User.findById({ _id: req.user.id }).select("-password")
         res.status(200).json({ data: view })
     } catch (error) {
         res.status(400).json({ message: error.message });
