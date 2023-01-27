@@ -25,7 +25,8 @@ export const createMenu=async(req,res)=>{
 
 export  const getmenu=async(req,res)=>{
     try {
-        const menu= await Menu.find()
+        let id=req.params.id
+        const menu= await Menu.findById({_id:id})
         if(menu.length==0) return res.status(200).json({mesage:"Sorry no menu has right now"})
 
         res.status(200).json({data:menu})
@@ -65,39 +66,7 @@ export const menuTable=async(req,res)=>{
     try {
     const menu= await Menu.find()
     if(!menu) return res.status(200).json({message:"Sorry no Data"})
-    obj= {
-    "columns": [
-    {
-    "label": "Menu",
-    "field": "name",
-    "width": 270,
-    
-    },
-    {
-    "label": "Menu Code",
-    "field": "menuCode",
-    "width": 170
-    },
-    {
-    "label": "View",
-    "field": "view",
-    "width": 150
-    },
-    {
-        "label": "Edit",
-        "field": "Edit",
-        "width": 150
-        },
-    ],
-    
-    "rows": [
-    
-    ]
-    }
-    menu?.map((item)=>(
-    obj.rows.push({"name" : item.menuName,"menuCode" : item.menuCode,})
-    ))
-    res.status(200).json({data:obj})
+    res.status(200).json({data:menu})
     } catch (error) {
     res.status(400).json({message:error.message});
     }
