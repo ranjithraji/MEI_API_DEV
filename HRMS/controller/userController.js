@@ -135,7 +135,7 @@ export const deleteUser = async (req, res) => {
 
 export const profile = async (req, res) => {
     try {
-        const view = await User.find({ _id: req.user.id }).select("-password")
+        const view = await User.findById({ _id: req.user.id }).select("-password")
         res.status(200).json({ data: view })
     } catch (error) {
         res.status(400).json({ message: error.message });
