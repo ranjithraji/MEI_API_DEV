@@ -2,12 +2,12 @@ import Menu from '../models/menuModel.js'
 
 export const createMenu=async(req,res)=>{
 
-    const num = Math.random() * (100 - 1 + 1) + 1
-    let z= num.toString().slice(0,2)
+    const num =Buffer.from(Math.random().toString()).toString().substring(10,12);
+    // let z= num.toString().slice(0,2)
     let code = "HRM"
     let menu = req.body.menuName;
     let gr= menu?.toUpperCase().slice(0,3)
-    const newcode=code+gr+z
+    const newcode=code+gr+num
     // console.log(newcode);
     const found=await Menu.findOne({menuName:menu})
     if(found) return res.status(400).json({message:"Menu already exists"});
