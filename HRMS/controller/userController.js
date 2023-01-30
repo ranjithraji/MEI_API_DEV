@@ -460,7 +460,7 @@ export const UserFam = async (req, res) => {
     try {
         let id = req.query.id;
         let Xuser = await User.findById({ _id: id });
-        if (!Xuser) return res.status(200).json({ message: "No user found" })
+        if (!Xuser) return res.status(404).json({ message: "No user found" })
 
         let userFamily = new Family({
             userId: id,
@@ -489,7 +489,7 @@ export const updateFam = async (req, res) => {
     console.log(obj);
     if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     try {
-        await Family.findByIdAndUpdate({ _id: req.body.id }, { $set: req.body });
+        await Family.findOneAndUpdate({userId: req.body.id }, { $set: req.body });
         res.status(201).json({ message: "update success" });
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -508,7 +508,7 @@ export const getFam = async (req, res) => {
         let id = req.query.id;
         let Xuser = await User.findById({ _id: id });
         if (!Xuser) return res.status(200).json({ message: "No user found" })
-        const getFam = await Family.find()
+        const getFam = await Family.findOne({userId:id})
         res.status(200).json({ data: getFam })
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -526,9 +526,10 @@ export const deleteFam = async (req, res) => {
     if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     let id = req.query.id;
     try {
-        const user = await Family.findOneAndRemove({ _id: id });
+        const user = await Family.findOne({userId: id });
         if (!user) return res.status(404).json({ message: 'User not found' });
-        res.status(200).json({ data: user });
+        const userUpdate = await Family.findOneAndRemove({userId: id });
+        res.status(200).json({ data: userUpdate });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
