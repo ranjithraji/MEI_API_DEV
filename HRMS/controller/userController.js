@@ -386,7 +386,6 @@ export const previousCompanyUpdate = async (req, res) => {
                 await user.save()
                 return res.status(200).json({ message: "Company details updated" })
             }
-
         }
     } catch (error) {
         res.status(400).json({ message: error.message });
