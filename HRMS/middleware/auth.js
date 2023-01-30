@@ -4,7 +4,8 @@ import User from '../models/userModel.js'
 async function auth(req,res,next){
     // console.log(name);
     const token=req.header('hrms-auth-token')
-    if(!token) return res.status(403).json('forbidden token is unavailable') 
+    if(!token) return res.status(403).json({message:'forbidden - token is unavailable'}) 
+    
     try {
         const decoded=jwt.verify(token,process.env.JWT)
         // console.log(decoded);
@@ -21,7 +22,7 @@ async function auth(req,res,next){
         console.log(req.user)
         next(); 
     } catch (error) { 
-        res.status(400).send("invalid token")
+        res.status(400).json({message:"invalid token"})
     } 
 }
 
