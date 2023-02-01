@@ -22,13 +22,13 @@ const document =  new mongoose.Schema({
             type: String,
             required: true
         },
-        name: {
+        accountHolderName: {
             type: String,
             required: true
         },
     },
     identificationDetails: {
-        adhaarNo: {
+        aadhaarNo: {
             type: String ,
             required: true
         },

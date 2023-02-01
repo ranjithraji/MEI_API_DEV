@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import Education from "../models/educationModel.js"
 import {checkAccessCreate, checkAccessGet, checkAccessUpdate} from "../config/checkAccess.js"
 import Menu from "../models/menuModel.js"
@@ -127,3 +128,5 @@ export const getById = async (req, res) => {
         res.status(400).json({message:error.message});
     }
 };
+=======
+>>>>>>> 9d3115d2315b5e21fce4d0ece756e54dcc288b45

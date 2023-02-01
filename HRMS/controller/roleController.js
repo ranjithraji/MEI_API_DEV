@@ -24,6 +24,16 @@ export const getRole=async(req,res)=>{
     }
 }
 
+export const getRoleTable=async(req,res)=>{
+    try {
+        const role= await Role.find()
+        if(!role) return res.status(200).json({message:"Sorry no Data"})
+        res.status(200).json({data:role})
+    } catch (error) {
+        res.status(400).json({message:error.message});
+    }
+}
+
 export const deleteRole=async(req,res)=>{
     try {
         const roleType = req.body.roleType;
