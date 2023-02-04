@@ -23,6 +23,18 @@ export const createMenu=async(req,res)=>{
     }
 }
 
+export const getAll=async(req,res)=>{
+    try {
+        const menu= await Menu.find()
+        if(menu.length==0) return res.status(200).json({mesage:"Sorry no menu has right now"})
+
+        res.status(200).json({data:menu})
+
+    } catch (error) {
+        res.status(400).json({message:error.message});
+    }
+}
+
 export  const getmenu=async(req,res)=>{
     try {
         let id=req.params.id
