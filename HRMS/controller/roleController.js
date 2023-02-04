@@ -7,7 +7,7 @@ export const createRole=async(req,res)=>{
             code:req.body.code 
         })
         await data.save()
-        res.status(200).json({message:"Role Created"})
+        res.status(200).json({message:"Role Created",roleId:data._id})
     } catch (error) {
         res.status(400).json({message:error.message});
     }
