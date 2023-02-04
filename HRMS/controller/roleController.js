@@ -64,7 +64,18 @@ export const getRole=async(req,res)=>{
     }
 }
 
-export  const getRolebyId=async(req,res)=>{
+export const getRoleById=async(req,res)=>{
+    try {
+        const role= await Role.findById(req.params.id)
+        if(!role) return res.status(200).json({message:"Sorry no Data"})
+        res.status(200).json({data:role})
+    } catch (error) {
+        res.status(400).json({message:error.message});
+    }
+}
+
+
+export const getRoleTable=async(req,res)=>{
     try {
         let id=req.params.id
         const menu= await Role.findById({_id:id})
