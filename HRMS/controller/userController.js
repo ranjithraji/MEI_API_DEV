@@ -15,6 +15,7 @@ const saltRounds = 10;
 dotenv.config();
 
 export const reg = async (req, res) => {
+    console.log(req.body);
     let email = req.body.email
     let menu = req.body.menuId
     let obj =await checkAccessCreate(req.user, menu)
@@ -38,8 +39,8 @@ export const reg = async (req, res) => {
                 role: req.body.role,
             })
             try {
-                await register.save()
-                res.status(201).json({ message: "Register success" })
+                let user=await register.save()
+                res.status(201).json({ message: "Register success" ,id:user._id})
             } catch (error) {
                 res.status(400).json({ message: error.message });
             }
@@ -545,7 +546,7 @@ export const createAddress = async (req, res) => {
             postalCode: req.body.postalCode
         })
         await newAddress.save()
-        res.status(200).json({ message: "Address add success" })
+        res.status(200).json({ message: "Address add success" ,userId:newAddress.userId})
     } catch (error) {
         res.status(400).json({ message: error.message })
     }
