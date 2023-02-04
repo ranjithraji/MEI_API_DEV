@@ -34,7 +34,7 @@ router.get("/v2/viewCurrentCompany", [auth, authz], currentCompanyView)
 router.put("/v2/updateCurrentCompany", [auth, authz], currentCompanyUpdate)
 
 // Documnet Details------------
-router.post("/v2/addDocumentDetails", [auth, authz], addDocument)
+router.post("/v2/addDocumentDetails", addDocument)
 router.get("/v2/viewDocumentDetails", [auth, authz], viewDocument)
 router.put("/v2/updateDocumentDetails", [auth, authz], updateDocument)
 

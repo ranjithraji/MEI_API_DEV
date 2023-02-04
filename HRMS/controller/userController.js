@@ -218,9 +218,9 @@ export const currentCompanyUpdate = async (req, res) => {
 // Add Document Details
 
 export const addDocument = async (req, res) => {
-    let menu = req.body.menuId
-    let obj =await checkAccessCreate(req.user, menu)
-    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    // let menu = req.body.menuId
+    // let obj =await checkAccessCreate(req.user, menu)
+    // if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     let id =req.query.userId
     if(!id) return res.status(400).json({ message: "Please provide user id in query" });
     try {
@@ -335,10 +335,6 @@ export const addPreviousCompany = async (req, res) => {
     let id =req.query.userId
     if(!id) return res.status(400).json({ message: "Please provide user id in query" });
     try {
-<<<<<<< HEAD
-        const company = {
-            companyName: req.body.companyName, 
-=======
         let found= await User.findById({_id:id})
         if (!found) return res.status(404).json({ message: 'User not found' });
         let userFound=await Experience.findOne({userId:id, companyName:req.body.companyName, designation:req.body.designation, 
@@ -352,7 +348,6 @@ export const addPreviousCompany = async (req, res) => {
         const user = new Experience({
             userId: id,
             companyName: req.body.companyName,
->>>>>>> 9d3115d2315b5e21fce4d0ece756e54dcc288b45
             designation: req.body.designation,
             description: req.body.description,
             salary: req.body.salary,
@@ -607,9 +602,9 @@ export const createEducation=async(req,res)=>{
     } 
 }
 export const updateEducation=async(req,res)=>{
-    let menu = req.body.menuId
-    let obj =await checkAccessCreate(req.user, menu)
-    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    // let menu = req.body.menuId
+    // let obj =await checkAccessCreate(req.user, menu)
+    // if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     const id = req.query.userId;
     if(!id) return res.status(400).json({ message: "Please provide user id in query" });
     try {
