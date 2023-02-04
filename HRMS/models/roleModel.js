@@ -11,7 +11,7 @@ const role=new mongoose.Schema({
     },
     isActive:{
         type:Boolean,
-        default:true
+       default:true
       },
     isBlock:{
         type:Boolean,
