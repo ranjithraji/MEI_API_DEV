@@ -9,4 +9,5 @@ router.get("/view_byid/:id",getRoleById)
 router.put("/update_role/:id",updateRole)
 router.delete("/delete_role",deleteRole)
 
+
 export default router
