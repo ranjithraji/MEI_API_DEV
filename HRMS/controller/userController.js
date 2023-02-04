@@ -139,6 +139,21 @@ export const getAllUser = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 }
+export const getNoOwner = async (req, res) => {
+    try {
+        let data=[]
+        const getUser = await User.find().select("-password")
+        getUser.map((item)=>{
+            if(item.isOwner == true){
+                getUser.splice(0,1)
+            }
+        })
+        data.push(getUser)
+        res.status(200).json({ data: data })
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
 
 
 // Adding User's Current Company Details 
