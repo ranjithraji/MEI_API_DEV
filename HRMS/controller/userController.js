@@ -15,6 +15,7 @@ const saltRounds = 10;
 dotenv.config();
 
 export const reg = async (req, res) => {
+    console.log(req.body);
     let email = req.body.email
     let menu = req.body.menuId
     let obj =await checkAccessCreate(req.user, menu)
@@ -38,8 +39,8 @@ export const reg = async (req, res) => {
                 role: req.body.role,
             })
             try {
-                await register.save()
-                res.status(201).json({ message: "Register success" })
+                let user=await register.save()
+                res.status(201).json({ message: "Register success" ,id:user._id})
             } catch (error) {
                 res.status(400).json({ message: error.message });
             }
@@ -260,11 +261,30 @@ export const addDocument = async (req, res) => {
 }
 
 // View Document Details
+export const viewid = async (req, res) => {
+    let id =req.query.userId
+    if(!id) return res.status(400).json({ message: "Please provide user id in query" });
+    try {
+        let found= await User.findById({_id:id})
+        if (!found) return res.status(404).json({ message: 'User not found' });
+        const document = await Document.findOne({ userId: id })//.populate('userId')
+        console.log(document);
+        if (!document) {
+            return res.status(400).json({ message: "No document details found for this user" })
+        } else {
+            return res.status(200).json({data:document})
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+
 
 export const viewDocument = async (req, res) => {
-    let menu = req.body.menuId
-    let obj =await checkAccessGet(req.user, menu)
-    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    // let menu = req.body.menuId
+    // let obj =await checkAccessGet(req.user, menu)
+    // if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     let id =req.query.userId
     if(!id) return res.status(400).json({ message: "Please provide user id in query" });
     try {
@@ -329,9 +349,9 @@ export const updateDocument = async (req,res) => {
 // Add user's previous company details
 
 export const addPreviousCompany = async (req, res) => {
-    let menu = req.body.menuId
-    let obj =await checkAccessCreate(req.user, menu)
-    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    // let menu = req.body.menuId
+    // let obj =await checkAccessCreate(req.user, menu)
+    // if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     let id =req.query.userId
     if(!id) return res.status(400).json({ message: "Please provide user id in query" });
     try {
@@ -364,11 +384,27 @@ export const addPreviousCompany = async (req, res) => {
 }
 
 // View user's previous company details
+export const viewexid = async (req, res) => {  
+    let id =req.query.userId
+    if(!id) return res.status(400).json({ message: "Please provide user id in query" });
+    try {
+        let found= await User.findById({_id:id})
+        if (!found) return res.status(404).json({ message: 'User not found' });
+        const company = await Experience.find({ userId: id })//.populate('userId')
+        console.log(company);
+        if (!company) return res.status(400).json({ message: "No company details found" })
+        res.status(200).json({data:company}) //.map((item) => item.previewsCompanies)
+        
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+
+}
 
 export const viewPreviousCompany = async (req, res) => {
-    let menu = req.body.menuId
-    let obj =await checkAccessGet(req.user, menu)
-    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    // let menu = req.body.menuId
+    // let obj =await checkAccessGet(req.user, menu)
+    // if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     let id =req.query.userId
     if(!id) return res.status(400).json({ message: "Please provide user id in query" });
     try {
@@ -510,7 +546,7 @@ export const createAddress = async (req, res) => {
             postalCode: req.body.postalCode
         })
         await newAddress.save()
-        res.status(200).json({ message: "Address add success" })
+        res.status(200).json({ message: "Address add success" ,userId:newAddress.userId})
     } catch (error) {
         res.status(400).json({ message: error.message })
     }
@@ -554,9 +590,9 @@ export const viewUserAddress = async (req, res) => {
 
 
 export const createEducation=async(req,res)=>{
-    let menu = req.body.menuId
-    let obj =await checkAccessCreate(req.user, menu)
-    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    // let menu = req.body.menuId
+    // let obj =await checkAccessCreate(req.user, menu)
+    // if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     const id = req.query.userId;
     if(!id) return res.status(400).json({ message: "Please provide user id in query" });
     try {
@@ -656,9 +692,9 @@ export const getAllEducation = async (req, res) => {
     }
 };
 export const getByIdEducation = async (req, res) => {
-    let menu = req.body.menuId
-    let obj =await checkAccessCreate(req.user, menu)
-    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    // let menu = req.body.menuId
+    // let obj =await checkAccessCreate(req.user, menu)
+    // if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     const id = req.query.userId;
     if(!id) return res.status(400).json({ message: "Please provide user id in query" });
     try {
