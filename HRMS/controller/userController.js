@@ -590,9 +590,9 @@ export const viewUserAddress = async (req, res) => {
 
 
 export const createEducation=async(req,res)=>{
-    // let menu = req.body.menuId
-    // let obj =await checkAccessCreate(req.user, menu)
-    // if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    let menu = req.body.menuId
+    let obj =await checkAccessCreate(req.user, menu)
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     const id = req.query.userId;
     if(!id) return res.status(400).json({ message: "Please provide user id in query" });
     try {
