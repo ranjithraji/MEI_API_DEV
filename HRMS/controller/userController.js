@@ -111,6 +111,17 @@ export const updateUser = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 }
+export const upRoleUser = async (req, res) => {
+    try {
+        let menu = req.body.menuId
+        let obj =await checkAccessUpdate(req.user, menu)
+        if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+        const user = await User.findByIdAndUpdate(req.params.id, { $set: {role:req.body.role}}, { new: true })
+        res.status(200).json({ meesage: "Updated successfully" })
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
 
 export const deleteUser = async (req, res) => {
     let email = req.body.email
