@@ -74,14 +74,34 @@ export const updatemenu=async(req,res)=>{
 }
 
 export const menuTable=async(req,res)=>{
-    let obj
     try {
-    const menu= await Menu.find()
-    if(!menu) return res.status(200).json({message:"Sorry no Data"})
-    res.status(200).json({data:menu})
+        let obj=[]
+        const menu= await Menu.find()
+        menu.map((item)=>{
+            if(item.isBlock===false){
+                obj.push(item);
+            }
+        })
+        if(!menu) return res.status(200).json({message:"Sorry no Data"})
+        res.status(200).json({data:obj}) 
     } catch (error) {
     res.status(400).json({message:error.message});
     }
+}
+export const menuTable2=async(req,res)=>{
+    try {
+        let obj=[]
+        const menu= await Menu.find()
+        menu.map((item)=>{
+            if(item.isBlock===true){
+                obj.push(item);
+            }
+        })
+        if(!menu) return res.status(200).json({message:"Sorry no Data"})
+        res.status(200).json({data:obj}) 
+    } catch (error) {
+    res.status(400).json({message:error.message});
     }
+}
 
 

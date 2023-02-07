@@ -110,5 +110,36 @@ export const updateRole=async(req,res)=>{
     }
 }
 
+export const roleTable=async(req,res)=>{
+    try {
+        let obj=[]
+        const menu= await Role.find()
+        menu.map((item)=>{
+            if(item.isBlock===false){
+                obj.push(item);
+            }
+        })
+        if(!menu) return res.status(200).json({message:"Sorry no Data"})
+        res.status(200).json({data:obj}) 
+    } catch (error) {
+    res.status(400).json({message:error.message});
+    }
+}
+export const roleTable2=async(req,res)=>{
+    try {
+        let obj=[]
+        const menu= await Role.find()
+        menu.map((item)=>{
+            if(item.isBlock===true){
+                obj.push(item);
+            }
+        })
+        if(!menu) return res.status(200).json({message:"Sorry no Data"})
+        res.status(200).json({data:obj}) 
+    } catch (error) {
+    res.status(400).json({message:error.message});
+    }
+}
+
 
 

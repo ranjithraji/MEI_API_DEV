@@ -1,5 +1,5 @@
 import express from "express"
-import {createMenu, deletemenu, getAll, getmenu, menuTable, updatemenu} from "../controller/menuController.js"
+import {createMenu, deletemenu, getAll, getmenu, menuTable, menuTable2, updatemenu} from "../controller/menuController.js"
 import auth from "../middleware/auth.js";
 const router = express.Router();
 
@@ -9,6 +9,7 @@ router.get("/getallMenu",getAll)
 router.put("/update_menu/:id",updatemenu)
 router.delete("/delete_menu",deletemenu)
 router.get("/menutable",menuTable)
+router.get("/menudelete",menuTable2)
 
 
 export default router
