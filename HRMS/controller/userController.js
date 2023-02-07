@@ -81,6 +81,9 @@ export const ownerReg = async (req, res) => {
 export const login = async (req, res) => {
     let email = req.body.email
     let foundUser = await User.findOne({ email: email })
+    console.log(!foundUser.isActive );
+    if(foundUser.isOwner==false && foundUser.isActive==false) return  res.status(404).json({ message: "you are not active user" })
+    if(foundUser.isOwner==false && foundUser.isBlock==true) return  res.status(404).json({ message: "you are blocked user" })
     if (foundUser) {
         bcrypt.compare(req.body.password, foundUser.password, (err, result) => {
             if (result) {
@@ -90,6 +93,8 @@ export const login = async (req, res) => {
                 res.status(400).json({ message: "please enter correct password" })
             }
         })
+    }else {
+        res.status(404).json({ message: "user not found" })
     }
 }
 
@@ -281,9 +286,9 @@ export const viewid = async (req, res) => {
 
 
 export const viewDocument = async (req, res) => {
-    // let menu = req.body.menuId
-    // let obj =await checkAccessGet(req.user, menu)
-    // if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
+    let menu = req.body.menuId
+    let obj =await checkAccessGet(req.user, menu)
+    if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     let id =req.query.userId
     if(!id) return res.status(400).json({ message: "Please provide user id in query" });
     try {
@@ -691,9 +696,6 @@ export const getAllEducation = async (req, res) => {
     }
 };
 export const getByIdEducation = async (req, res) => {
-    // let menu = req.body.menuId
-    // let obj =await checkAccessCreate(req.user, menu)
-    // if (obj.access == false && obj.message !== null) return res.status(obj.status).json({ message: obj.message});
     const id = req.query.userId;
     if(!id) return res.status(400).json({ message: "Please provide user id in query" });
     try {
