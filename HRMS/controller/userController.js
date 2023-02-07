@@ -91,6 +91,8 @@ export const login = async (req, res) => {
                 res.status(400).json({ message: "please enter correct password" })
             }
         })
+    }else{
+        res.status(404).json({ message: "user not found" })
     }
 }
 
