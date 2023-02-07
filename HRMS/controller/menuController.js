@@ -6,8 +6,9 @@ export const createMenu = async (req, res) => {
     .substring(10, 12);
   // let z= num.toString().slice(0,2)
   let code = "HRM";
-  let menu = req.body.menuName;
-  let gr = menu?.toUpperCase().slice(0, 3);
+  let menu = req.body.menuName?.toLowerCase();
+  menu=menu?.charAt(0).toUpperCase() + menu.slice(1)
+  let gr = menu?.toUpperCase().slice(0, 3); 
   const newcode = code + gr + num;
   // console.log(newcode);
   const found = await Menu.findOne({ menuName: menu });
