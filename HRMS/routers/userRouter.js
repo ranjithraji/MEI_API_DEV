@@ -1,7 +1,7 @@
 import express from "express";
 import { login, reg,  ownerReg, deleteUser, profile, updateUser, UserFam, updateFam, getFam, deleteFam, createAddress, updateAddress, viewUserAddress, currentCompany, 
     currentCompanyView, currentCompanyUpdate, addDocument, viewDocument, updateDocument, addPreviousCompany, viewPreviousCompany, previousCompanyUpdate, createEducation, 
-    updateEducation, getAllEducation, getByIdEducation, getAllUser, viewid, viewexid, getNoOwner 
+    updateEducation, getAllEducation, getByIdEducation, getAllUser, viewid, viewexid, getNoOwner, getUserById 
 } from "../controller/userController.js";
 
 import auth from "../middleware/auth.js";
@@ -24,6 +24,7 @@ router.put("/v2/update", [auth, authz], updateUser)
 router.delete("/v2/deleteUser", [auth, authz], deleteUser)
 router.get("/get", [auth], getAllUser)
 router.get("/noOwner", [auth], getNoOwner)
+router.get("/v2/getbyid/:id", [auth, authz], getUserById)
 
 router.post("/v2/Useraddress", [auth, authz], createAddress)
 router.put("/v2/Updateaddress", [auth, authz], updateAddress)

@@ -168,6 +168,16 @@ export const getNoOwner = async (req, res) => {
     }
 }
 
+export const getUserById = async (req, res) => {
+    try {
+        const getUser = await User.findById({ _id: req.params.id }).select("-password")
+        res.status(200).json({ data: getUser })
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+        
+    }
+
 
 // Adding User's Current Company Details 
 
