@@ -53,7 +53,7 @@ export const getByIdForAccess = async (req, res) => {
         let user=await Rolemenu.find({role:req.params.id}).populate("menu");
         user.map((i)=>{
             let menu = i.menu.menuName
-            obj.push({menu})
+            obj.push({menu,id:i.menu._id})
         })
         res.status(200).json({data:obj});
     } catch (error) {
