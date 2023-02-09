@@ -7,7 +7,7 @@ export const createRole=async(req,res)=>{
     let exRole = await Role.findOne({ roleType: roleType })
     const subst=roleType?.substring(0,3).toUpperCase()  
     let text='HRM'
-   const math=Buffer.from(Math.random().toString()).toString().substring(10,12);
+   const math=Bu0ffer.from(Math.random().toString()).toString().substring(10,12);
     if (!exRole) {
         let createrole = new Role({
             roleType:roleType,
@@ -29,10 +29,14 @@ export const createRole=async(req,res)=>{
 
 export const getRole=async(req,res)=>{
     try {
-        const role= await Role.find()
-        if(!role) return res.status(200).json({message:"Sorry no Data"})
-
-        res.status(200).json({data:role})
+        let obj=[]
+        const menu= await Role.find()
+        menu.map((item)=>{
+            if(item.isBlock===false && item.isActive===true){
+                obj.push(item);
+            }
+        })
+        res.status(200).json({data:obj})
     } catch (error) {
         res.status(400).json({message:error.message});
     }
@@ -114,6 +118,3 @@ export const roleTable2=async(req,res)=>{
     res.status(400).json({message:error.message});
     }
 }
-
-
-

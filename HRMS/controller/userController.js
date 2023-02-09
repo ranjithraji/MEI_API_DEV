@@ -15,7 +15,6 @@ const saltRounds = 10;
 dotenv.config();
 
 export const reg = async (req, res) => {
-    console.log(req.body);
     let email = req.body.email
     let menu = req.body.menuId
     let obj =await checkAccessCreate(req.user, menu)
@@ -85,6 +84,8 @@ export const login = async (req, res) => {
     let email = req.body.email
     let foundUser = await User.findOne({ email: email })
     if (foundUser) {
+        if(foundUser.isOwner==false && foundUser.isActive==false) return res.status(400).json({ message: "your are not active user" })
+        if(foundUser.isOwner==false && foundUser.isBlock==true) return res.status(400).json({ message: "your are blocked user" })
         if(foundUser.isOwner==false && foundUser.isActive==false) return  res.status(404).json({ message: "you are not active user" })
         if(foundUser.isOwner==false && foundUser.isBlock==true) return  res.status(404).json({ message: "you are blocked user" })
         bcrypt.compare(req.body.password, foundUser.password, (err, result) => {
@@ -95,8 +96,6 @@ export const login = async (req, res) => {
                 res.status(400).json({ message: "please enter correct password" })
             }
         })
-    }else {
-        res.status(404).json({ message: "user not found" })
     }
 }
 
@@ -160,9 +159,9 @@ export const getNoOwner = async (req, res) => {
     try {
         let data=[]
         const getUser = await User.find().select("-password")
-        getUser.map((item)=>{
+        getUser.map((item,index)=>{
             if(item.isOwner == true){
-                getUser.splice(0,1)
+                getUser.splice(index,1)
             }
         })
         data.push(getUser)
@@ -172,9 +171,17 @@ export const getNoOwner = async (req, res) => {
     }
 }
 
+export const getUserById = async (req, res) => {
+    try {
+        const getUser = await User.findById({ _id: req.params.id }).select("-password")
+        res.status(200).json({ data: getUser })
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
 
 // Adding User's Current Company Details 
-
 export const currentCompany = async (req, res) => {
     let menu = req.body.menuId
     let obj =await checkAccessCreate(req.user, menu)
@@ -238,7 +245,6 @@ export const currentCompanyUpdate = async (req, res) => {
         let found=await CurrentCompany.findOne({userId:id})
         if (!found) return res.status(404).json({ message: 'current company details not found for this user' });
         const company = await CurrentCompany.findOneAndUpdate({userId:id}, { $set: req.body })
-        console.log(company);
         if (!company) {
             return res.status(400).json({ message: "No company details found" })
         }
@@ -261,7 +267,6 @@ export const addDocument = async (req, res) => {
         if (!found) return res.status(404).json({ message: 'User not found ' });
         const user = await Document.findOne({userId: id})
         if (user) return res.status(400).json({ message: "Document details already added for this user" })
-        console.log(req.body);
         const document = new Document({
             userId: id,
             bankDetails: {
@@ -300,7 +305,6 @@ export const viewid = async (req, res) => {
         let found= await User.findById({_id:id})
         if (!found) return res.status(404).json({ message: 'User not found' });
         const document = await Document.findOne({ userId: id })//.populate('userId')
-        console.log(document);
         if (!document) {
             return res.status(400).json({ message: "No document details found for this user" })
         } else {
@@ -323,7 +327,6 @@ export const viewDocument = async (req, res) => {
         let found= await User.findById({_id:id})
         if (!found) return res.status(404).json({ message: 'User not found' });
         const document = await Document.findOne({ userId: id })//.populate('userId')
-        console.log(document);
         if (!document) {
             return res.status(400).json({ message: "No document details found for this user" })
         } else {
@@ -423,7 +426,6 @@ export const viewexid = async (req, res) => {
         let found= await User.findById({_id:id})
         if (!found) return res.status(404).json({ message: 'User not found' });
         const company = await Experience.find({ userId: id })//.populate('userId')
-        console.log(company);
         if (!company) return res.status(400).json({ message: "No company details found" })
         res.status(200).json({data:company}) //.map((item) => item.previewsCompanies)
         
@@ -443,7 +445,6 @@ export const viewPreviousCompany = async (req, res) => {
         let found= await User.findById({_id:id})
         if (!found) return res.status(404).json({ message: 'User not found' });
         const company = await Experience.find({ userId: id })//.populate('userId')
-        console.log(company);
         if (!company) return res.status(400).json({ message: "No company details found" })
         res.status(200).json({data:company}) //.map((item) => item.previewsCompanies)
         
@@ -482,7 +483,6 @@ export const UserFam = async (req, res) => {
         let Xuser = await User.findById({ _id: id });
         if (!Xuser) return res.status(200).json({ message: "user not found" })
         let XuserFam = await Family.findOne({ userId: id ,relationship: req.body.relationship?.toLowerCase()});
-        console.log(XuserFam);
         if(XuserFam) return res.status(400).json({ message: `Already added ${XuserFam?.relationship} details for this user`  })
         let userFamily = new Family({
             userId: id,
@@ -595,7 +595,6 @@ export const updateAddress = async (req, res) => {
         if (!found) return res.status(404).json({ message: 'User not found ' });
         let Xuser = await Address.findOne({ userId: id })
         if (!Xuser) return res.status(404).json({ message: "address not found for this user" })
-        console.log(req.body);
         await Address.findOneAndUpdate({userId: id},{ $set: req.body })
         res.status(200).json({ message: "Address Updated" })
     } catch (error) {

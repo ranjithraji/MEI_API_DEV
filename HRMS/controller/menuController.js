@@ -10,7 +10,6 @@ export const createMenu = async (req, res) => {
   menu=menu?.charAt(0).toUpperCase() + menu.slice(1)
   let gr = menu?.toUpperCase().slice(0, 3); 
   const newcode = code + gr + num;
-  // console.log(newcode);
   const found = await Menu.findOne({ menuName: menu });
   if (found) return res.status(400).json({ message: "Menu already exists" });
   try {
@@ -83,7 +82,7 @@ export const menuTable=async(req,res)=>{
         let obj=[]
         const menu= await Menu.find()
         menu.map((item)=>{
-            if(item.isBlock===false){
+            if(item.isBlock===false && item.isActive===true){
                 obj.push(item);
             }
         })
