@@ -16,6 +16,8 @@ async function auth(req,res,next){
             req.user={...req.user,isOwner:getOwner?.isOwner}    
             return next()
         }
+        let userFound=await User.findById({_id:req.user.id})
+        if(!userFound.role) return res.status(404).json({message:"Not mapping any role for this user"})
         let user=await User.findById({_id:req.user.id}).populate("role")
         // console.log(user);
         req.user={...req.user,...{roleId:user.role._id,roleName:user.role.roleType,isOwner:user.isOwner}}
