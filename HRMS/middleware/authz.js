@@ -10,5 +10,5 @@ const authZ=async(req,res,next)=>{
     req.user={...req.user ,access}
     next() 
 }
-
+ 
 export default authZ;
