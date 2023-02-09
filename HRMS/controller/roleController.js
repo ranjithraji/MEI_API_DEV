@@ -7,7 +7,7 @@ export const createRole=async(req,res)=>{
     let exRole = await Role.findOne({ roleType: roleType })
     const subst=roleType?.substring(0,3).toUpperCase()  
     let text='HRM'
-   const math=Bu0ffer.from(Math.random().toString()).toString().substring(10,12);
+   const math=Buffer.from(Math.random().toString()).toString().substring(10,12);
     if (!exRole) {
         let createrole = new Role({
             roleType:roleType,
