@@ -31,7 +31,7 @@ const currentCompany =  new mongoose.Schema({
     isFresher:{
         type: Boolean,
         required: true,
-        default: false
+        default: true
     }
 
 }, {
