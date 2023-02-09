@@ -17,6 +17,8 @@ export const checkAccessGet=async(user,menu)=>{
     return obj
 }
 
+
+
 export const checkAccessCreate=async(user,menu)=>{
     let obj={access:false,message:null,status:400}
     let count=0

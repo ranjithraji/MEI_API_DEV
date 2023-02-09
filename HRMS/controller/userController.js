@@ -79,13 +79,14 @@ export const ownerReg = async (req, res) => {
     }
 }
 
+
+
 export const login = async (req, res) => {
     let email = req.body.email
     let foundUser = await User.findOne({ email: email })
-    console.log(!foundUser.isActive );
-    if(foundUser.isOwner==false && foundUser.isActive==false) return  res.status(404).json({ message: "you are not active user" })
-    if(foundUser.isOwner==false && foundUser.isBlock==true) return  res.status(404).json({ message: "you are blocked user" })
     if (foundUser) {
+        if(foundUser.isOwner==false && foundUser.isActive==false) return  res.status(404).json({ message: "you are not active user" })
+        if(foundUser.isOwner==false && foundUser.isBlock==true) return  res.status(404).json({ message: "you are blocked user" })
         bcrypt.compare(req.body.password, foundUser.password, (err, result) => {
             if (result) {
                 const token = jwt.sign({ id: foundUser?._id }, process.env.JWT)
